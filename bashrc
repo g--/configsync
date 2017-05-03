@@ -27,6 +27,7 @@ PATH=${CONFIG_SYNC_ROOT}/bin.${OSTYPE}:${PATH}
 export PATH
 fi
 
+. ${DIR}/bashrc.all
 if [ -e ${DIR}/bashrc.${OS_FAMILY} ]; then
   . ${DIR}/bashrc.${OS_FAMILY}
 fi
