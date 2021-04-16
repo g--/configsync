@@ -32,4 +32,10 @@ __prompt_command() {
     fi
 }
 
+function newbranch () {
+  git fetch
+  git checkout -b $1 origin/master
+  git push --set-upstream origin $1
+}
 
+export EDITOR=`which vim`
