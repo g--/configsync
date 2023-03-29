@@ -6,6 +6,9 @@ alias dcrm='docker-compose rm'
 alias py2=python2
 alias py3=python3
 
+alias k=kubectl
+alias vi=nvim
+
 export PS1='\h:\W \u \$ '
 PROMPT_COMMAND=__prompt_command # Func to gen PS1 after CMDs
 
@@ -38,4 +41,4 @@ function newbranch () {
   git push --set-upstream origin $1
 }
 
-export EDITOR=`which vim`
+export EDITOR=`which nvim`
