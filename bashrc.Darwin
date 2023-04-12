@@ -1,2 +1,2 @@
+export PATH=$PATH:/opt/homebrew/bin:/opt/homebrew/sbin
 
-alias gpg=gpg2

@@ -1,11 +1,14 @@
 
+
+brew tap jorgelbg/tap
 brew install git \
 	bash-completion \
 	ack  \
 	pinentry-mac  \
+	pinentry-touchid  \
 	watch  \
 	wget  \
-	gnupg21  \
+	gnupg \
 	fzf \
 	helm \
 	joplin-cli \

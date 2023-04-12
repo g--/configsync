@@ -8,15 +8,34 @@ alias py3=python3
 
 alias k=kubectl
 alias vi=nvim
+alias kshell='kubectl run -i --tty --rm geoffo-debug --image=busybox --restart=Never -- sh'
+alias ky='kubectl get -o yaml'
+alias kg='kubectl get'
 
-export PS1='\h:\W \u \$ '
-PROMPT_COMMAND=__prompt_command # Func to gen PS1 after CMDs
+HISTSIZE=100000
+HISTFILESIZE=100000
+
 
 eval $(gpg-connect-agent --quiet /bye)
 export SSH_AUTH_SOCK="$(gpgconf --list-dirs agent-ssh-socket)"
 
-__prompt_command() {
+_window_title() {
+  if git rev-parse --git-dir > /dev/null 2>&1; then
+     ROOT=`git rev-parse --show-toplevel`
+     echo -n "${ROOT##*/}: "
+     echo -n `git rev-parse --abbrev-ref HEAD`
+  else
+     echo -n "$PWD"
+  fi
+}
+
+export PS1='\h:\W \u \$ '
+_prompt_command() {
     local EXIT="$?"             # This needs to be first
+
+  THING=`_window_title`
+  echo -ne "\033];${THING}\007";
+
     PS1=""
 
     local RCol='\[\e[0m\]'
@@ -35,10 +54,15 @@ __prompt_command() {
     fi
 }
 
+if [ $ITERM_SESSION_ID ]; then
+  export PROMPT_COMMAND='_prompt_command'
+fi
+
+
 function newbranch () {
   git fetch
   git checkout -b $1 origin/master
   git push --set-upstream origin $1
 }
 
-export EDITOR=`which nvim`
+export EDITOR=nvim

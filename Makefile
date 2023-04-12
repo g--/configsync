@@ -8,6 +8,7 @@ install:
 	launchctl load ~/Library/LaunchAgents/ca.oakham.geoff.guistart.plist
 	ln -s ~/.configsync/ca.oakham.geoff.controlkeyremap.plist ~/Library/LaunchAgents/
 	launchctl load ~/.configsync/ca.oakham.geoff.controlkeyremap.plist
+	mkdir -p ~/.gnupg
 
 .PHONY: uninstall
 uninstall:
