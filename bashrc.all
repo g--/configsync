@@ -4,6 +4,7 @@ alias dck='docker-compose kill'
 alias dcrm='docker-compose rm'
 
 alias py2=python2
+alias py=python3
 alias py3=python3
 
 alias k=kubectl
@@ -65,4 +66,5 @@ function newbranch () {
   git push --set-upstream origin $1
 }
 
-export EDITOR=nvim
+export EDITOR=`which nvim`
+export GET_EDITOR=${EDITOR}
