@@ -7,8 +7,10 @@ alias py2=python2
 alias py=python3
 alias py3=python3
 
+export EDITOR=`which nvim || which vim || which vi`
+export GET_EDITOR=${EDITOR}
 alias k=kubectl
-alias vi=nvim
+alias vi=${EDITOR}
 alias kshell='kubectl run -i --tty --rm geoffo-debug --image=busybox --restart=Never -- sh'
 alias ky='kubectl get -o yaml'
 alias ke='kubectl edit'
@@ -113,5 +115,3 @@ function rebase () {
   git rebase `git rev-parse --abbrev-ref origin/HEAD`
 }
 
-export EDITOR=`which nvim || which vim || which vi`
-export GET_EDITOR=${EDITOR}
