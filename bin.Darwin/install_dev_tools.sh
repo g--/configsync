@@ -13,6 +13,7 @@ brew install git \
 	helm \
 	joplin-cli \
 	kubernetes-cli \
+	krew \
 	neovim \
 	python@3.11 \
 	the_silver_searcher \

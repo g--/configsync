@@ -4,7 +4,7 @@ CONFIG_SYNC_ROOT=~/.configsync
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 
-PATH=${CONFIG_SYNC_ROOT}/bin:/usr/local/bin:/usr/local/sbin:/bin:/sbin:/usr/bin:/usr/sbin
+PATH=${CONFIG_SYNC_ROOT}/bin:${HOME}/.krew/bin:/usr/local/bin:/usr/local/sbin:/bin:/sbin:/usr/bin:/usr/sbin
 export PATH
 
 SSH_AUTH_SOCK=~/.gnupg/S.gpg-agent.ssh; export SSH_AUTH_SOCK

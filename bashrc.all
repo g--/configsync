@@ -11,7 +11,15 @@ alias k=kubectl
 alias vi=nvim
 alias kshell='kubectl run -i --tty --rm geoffo-debug --image=busybox --restart=Never -- sh'
 alias ky='kubectl get -o yaml'
+alias ke='kubectl edit'
 alias kg='kubectl get'
+alias kd='kubectl describe'
+alias kn='kubectl config set-context --current --namespace'
+
+function ts2date () {
+${GNU_DATE} -d \@${1}
+}
+alias unixtime='${GNU_DATE} +%s'
 
 HISTSIZE=100000
 HISTFILESIZE=100000
@@ -20,15 +28,49 @@ HISTFILESIZE=100000
 eval $(gpg-connect-agent --quiet /bye)
 export SSH_AUTH_SOCK="$(gpgconf --list-dirs agent-ssh-socket)"
 
+_branch() {
+  if git rev-parse --git-dir > /dev/null 2>&1; then
+     echo -n `git rev-parse --abbrev-ref HEAD`
+  else
+     echo -n ""
+  fi
+}
+
+_ticket() {
+  BRANCH=`_branch`
+  if [[ "$BRANCH" =~ "/" ]]; then
+     echo -n $BRANCH | cut -f 1 -d "/"
+  else
+     echo -n ""
+  fi
+}
+
+_branch_no_ticket() {
+  BRANCH=`_branch`
+  if [[ "$BRANCH" =~ "/" ]]; then
+     echo -n $BRANCH | cut -f 2 -d "/"
+  else
+     echo -n $BRANCH
+  fi
+}
+
 _window_title() {
   if git rev-parse --git-dir > /dev/null 2>&1; then
      ROOT=`git rev-parse --show-toplevel`
      echo -n "${ROOT##*/}: "
-     echo -n `git rev-parse --abbrev-ref HEAD`
+     echo -n `_branch_no_ticket`
   else
      echo -n "$PWD"
   fi
 }
+
+function branch_status() {
+  MAIN=`git rev-parse --abbrev-ref origin/HEAD`
+  BASE=`git merge-base $MAIN HEAD`
+  git log --format=oneline --decorate=no $BASE..HEAD
+  git diff --name-status $BASE..HEAD
+}
+
 
 export PS1='\h:\W \u \$ '
 _prompt_command() {
@@ -62,8 +104,13 @@ fi
 
 function newbranch () {
   git fetch
-  git checkout -b $1 origin/master
+  git checkout -b $1 `git rev-parse --abbrev-ref origin/HEAD`
   git push --set-upstream origin $1
+}
+
+function rebase () {
+  git fetch
+  git rebase `git rev-parse --abbrev-ref origin/HEAD`
 }
 
 export EDITOR=`which nvim || which vim || which vi`
