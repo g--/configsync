@@ -4,6 +4,7 @@ brew tap jorgelbg/tap
 brew install git \
 	bash-completion \
 	ack  \
+	direnv  \
 	pinentry-mac  \
 	pinentry-touchid  \
 	watch  \

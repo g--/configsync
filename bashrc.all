@@ -18,6 +18,8 @@ alias kg='kubectl get'
 alias kd='kubectl describe'
 alias kn='kubectl config set-context --current --namespace'
 
+eval "$(direnv hook bash)"
+
 function ts2date () {
 ${GNU_DATE} -d \@${1}
 }
