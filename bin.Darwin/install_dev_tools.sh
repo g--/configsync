@@ -12,6 +12,7 @@ brew install git \
 	gnupg \
 	fzf \
 	helm \
+	jq \
 	joplin-cli \
 	kubernetes-cli \
 	krew \
