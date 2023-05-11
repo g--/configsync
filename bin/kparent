@@ -1,0 +1,93 @@
+#!/usr/bin/env python3
+#set syntax=py
+
+# only built-in libraries!
+import json
+import subprocess
+import os
+import sys
+import argparse
+
+def main():
+    parser = argparse.ArgumentParser(description="display the source of kubernetes resources")
+    parser.add_argument('-n', nargs=1)
+    flags, args = parser.parse_known_args()
+
+    if len(args) == 2:
+        kind = args[0]
+        name = args[1]
+    elif len(args) == 1:
+        kind = "Pod"
+        name = args[0]
+
+    if flags.n is not None and len(flags.n) == 1:
+        namespace = flags.n[0]
+    else:
+        namespace = None
+    find_parents(kind, name, namespace)
+
+def find_parents(kind, name, namespace):
+    if namespace:
+        namespace_args = ['-n', namespace]
+    else:
+        namespace_args = []
+        
+    queue = [{
+        "kind": kind,
+        "name": name,
+        "depth": 0,
+    }]
+    while queue:
+        item = queue.pop()
+
+        print(f"{indent(item['depth'])}{item['kind']} {item['name']}")
+        data = kubectl_get(namespace, item['kind'], item['name'])
+
+        labels = data['metadata'].get('labels', {})
+        annotations = data['metadata'].get('annotations', {})
+
+        if 'argocd.argoproj.io/instance' in labels:
+            argo = labels['argocd.argoproj.io/instance']
+            print(f"{indent(item['depth']+1)}Argo: {argo_link(argo)}")
+
+        if 'app.kubernetes.io/managed-by' in labels:
+            managed_by = labels['app.kubernetes.io/managed-by']
+            if managed_by.lower() == "helm":
+                name = labels.get('app.kubernetes.io/name')
+                version = labels.get('app.kubernetes.io/version')
+                chart = labels.get('helm.sh/chart')
+                instance = labels.get('app.kubernetes.io/instance')
+                print(f"{indent(item['depth']+1)}Helm: {instance} {chart} (running {name} {version})")
+            else:
+                print(f"{indent(item['depth']+1)}Managed by: {managed_by}")
+
+        for owner in data['metadata'].get('ownerReferences',[]):
+            queue.append({
+                "kind": owner['kind'],
+                "name": owner['name'],
+                "depth": item['depth'] + 1,
+            })
+        
+def kubectl_get(namespace, kind, name):
+    args = ['kubectl']
+    if namespace:
+        args.extend(['-n', namespace])
+    args.extend(['get', '-o', 'json', kind, name])
+    result = subprocess.run(args, stdout=subprocess.PIPE)
+    result.check_returncode()
+
+    return json.loads(result.stdout.decode('utf-8'))
+
+def argo_link(name):
+    base_url = os.environ.get('ARGO_APPLICATIONS_BASE_URL')
+    if base_url:
+        return f"{base_url}/{name}"
+    else:
+        return name
+
+
+def indent(n):
+    return ""
+
+main()
+
