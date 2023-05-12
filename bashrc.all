@@ -21,7 +21,6 @@ alias kl='kubectl logs'
 alias kn='kubectl config set-context --current --namespace'
 alias kx='kubectl exec -ti'
 
-eval "$(direnv hook bash)"
 
 function ts2date () {
 ${GNU_DATE} -d \@${1}
@@ -120,3 +119,4 @@ function rebase () {
   git rebase `git rev-parse --abbrev-ref origin/HEAD`
 }
 
+eval "$(direnv hook bash)"
