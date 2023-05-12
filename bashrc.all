@@ -13,7 +13,7 @@ alias k=kubectl
 alias vi=${EDITOR}
 alias kshell='kubectl run -i --tty --rm geoffo-debug --image=busybox --restart=Never -- sh'
 alias ky='kubectl get -o yaml'
-alias ky='kubectl logs'
+alias kl='kubectl logs'
 alias ke='kubectl edit'
 alias kg='kubectl get'
 alias kd='kubectl describe'
