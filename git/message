@@ -1,0 +1,26 @@
+feat: ✨ 
+
+
+
+Refs: 
+
+# feat: ✨ 
+# fix: 🐛 
+# hotfix: 🚑
+# build: 👷 
+# chore: 🛠️
+# ci: 👷 
+# docs: 📚
+# style: 💄 
+# refactor: ♻️ 
+# perf: 🐎 
+# test: 🚨 
+# initial: 🎉  
+# move: 🚚
+# lint: 👕
+#
+# <type>[optional scope]: <description> 
+# eg "feat(api)!: ✨"
+#  https://www.conventionalcommits.org/en/v1.0.0/
+#  https://gist.github.com/parmentf/035de27d6ed1dce0b36a
+
