@@ -20,11 +20,12 @@ alias ky='kubectl get -o yaml'
 alias kl='kubectl logs'
 alias ke='kubectl edit'
 alias kg='kubectl get'
+alias kga='kubectl get --all-namespaces'
 alias kd='kubectl describe'
 alias kl='kubectl logs'
 alias kn='kubectl config set-context --current --namespace'
 alias kx='kubectl exec -ti'
-
+alias kgn='kubectl api-resources --verbs=list --namespaced -o name  | xargs -n 1 kubectl get --show-kind --ignore-not-found  -n'
 
 function ts2date () {
 ${GNU_DATE} -d \@${1}
