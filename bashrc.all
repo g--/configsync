@@ -13,6 +13,11 @@ export GET_EDITOR=${EDITOR}
 alias gammend='git commit -a --amend --no-edit'
 alias gpush='rebase && safe_force_push'
 
+function gprunesquashmerged() {
+  MAIN=`git rev-parse --abbrev-ref HEAD`
+  git checkout -q ${MAIN} && git for-each-ref refs/heads/ "--format=%(refname:short)" | while read branch; do mergeBase=$(git merge-base ${MAIN} $branch) && [[ $(git cherry ${MAIN} $(git commit-tree $(git rev-parse "$branch^{tree}") -p $mergeBase -m _)) == "-"* ]] && git branch -D $branch; done
+}
+
 alias k=kubectl
 alias vi=${EDITOR}
 alias kshell='kubectl run -i --tty --rm geoffo-debug --image=busybox --restart=Never -- sh'
@@ -51,6 +56,8 @@ _ticket() {
   BRANCH=`_branch`
   if [[ "$BRANCH" =~ "/" ]]; then
      echo -n $BRANCH | cut -f 1 -d "/"
+  elif [[ -e "$PWD/.ticket" ]]; then
+     cat "$PWD/.ticket"
   else
      echo -n ""
   fi
@@ -120,8 +127,14 @@ fi
 
 
 function newbranch () {
+  if [[ "$2" == "" ]]; then
+     MAIN=`git rev-parse --abbrev-ref origin/HEAD`
+  else
+     MAIN=$2
+  fi
+
   git fetch
-  git checkout -b $1 `git rev-parse --abbrev-ref origin/HEAD`
+  git checkout -b $1 $MAIN
   git push --set-upstream origin $1
 }
 
