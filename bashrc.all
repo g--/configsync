@@ -20,7 +20,7 @@ function gprunesquashmerged() {
 
 alias k=kubectl
 alias vi=${EDITOR}
-alias kshell='kubectl run -i --tty --rm geoffo-debug --image=busybox --restart=Never -- sh'
+alias kshell='kubectl run -i --tty --rm geoffo-debug --image=nicolaka/netshoot --restart=Never -- sh'
 alias ky='kubectl get -o yaml'
 alias kl='kubectl logs'
 alias ke='kubectl edit'
@@ -51,6 +51,7 @@ _branch() {
      echo -n ""
   fi
 }
+export -f _branch
 
 _ticket() {
   BRANCH=`_branch`
@@ -62,6 +63,7 @@ _ticket() {
      echo -n ""
   fi
 }
+export -f _ticket
 
 _branch_no_ticket() {
   BRANCH=`_branch`
@@ -88,6 +90,13 @@ function branch_status() {
   git log --format=oneline --decorate=no $BASE..HEAD
   git diff --name-status $BASE..HEAD
 }
+
+function rebase_interactive() {
+  MAIN=`git rev-parse --abbrev-ref origin/HEAD`
+  BASE=`git merge-base $MAIN HEAD`
+  git rebase -i $BASE
+}
+
 
 function gdiff() {
   MAIN=`git rev-parse --abbrev-ref origin/HEAD`

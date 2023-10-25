@@ -1,0 +1,5 @@
+#!/usr/bin/env perl
+
+while (<>) {
+  print " -target $1\n" if m,# \S*?([a-zA-Z0-9_\.\-]+)\S*? will be, ;
+}
