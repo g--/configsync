@@ -1,3 +1,44 @@
+alias help='${HELP_COMMAND}'
+function _base_help {
+
+
+cat <<EOF
+Docker and kubernetes:
+    dc docker-compose
+
+Misc
+    ts2date - convert unix timestamp into human readable
+    unixtime - current time in seconds since epoch
+
+Kubernetes
+     k - kubectl
+     kg - 'kubectl get'
+     kga - 'kubectl get --all-namespaces'
+     kd - 'kubectl describe'
+     ky - 'kubectl get -o yaml'
+     kl - 'kubectl logs'
+     ke - 'kubectl edit'
+     kl - 'kubectl logs'
+     kn - change namespace
+     kx - 'kubectl exec -ti'
+     kgn <namespace> - dump all resources for the given namespace
+     kshell - create a pod and execute a shell on it
+
+Git flow
+    nb <tab> - new branch
+	gcommit <files> - commit (populates a message template)
+    gamend -  amend comit with updated files
+    gdiff - compare main with HEAD
+    gpush -  fetch, rebase, push
+    rebase - fetch, rebase
+    rebase_interactive - interactive rebase from trunk up
+    branch_status - summary of what's in this branch
+    gprunesquashmerged - prune old branches
+EOF
+}
+HELP_COMMAND=_base_help
+
+
 alias dc='docker-compose'
 alias dcl='docker-compose logs -f'
 alias dck='docker-compose kill'
@@ -10,7 +51,7 @@ alias py3=python3
 export EDITOR=`which nvim || which vim || which vi`
 export GET_EDITOR=${EDITOR}
 
-alias gammend='git commit -a --amend --no-edit'
+alias gamend='git commit -a --amend --no-edit'
 alias gpush='rebase && safe_force_push'
 
 function gprunesquashmerged() {
@@ -135,7 +176,7 @@ if [ $ITERM_SESSION_ID ]; then
 fi
 
 
-function newbranch () {
+function nb () {
   if [[ "$2" == "" ]]; then
      MAIN=`git rev-parse --abbrev-ref origin/HEAD`
   else
