@@ -1,0 +1,15 @@
+#!/bin/bash
+
+TEMPLATE_FILE=`mktemp`
+
+echo `cat ~/.configsync/git/commit_types | fzf` >> $TEMPLATE_FILE
+
+echo ""  >> $TEMPLATE_FILE
+
+echo "Refs:" `_ticket` >> $TEMPLATE_FILE
+
+git commit -t $TEMPLATE_FILE "$@"
+echo please cleanup $TEMPLATE_FILE
+
+
+
