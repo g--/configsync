@@ -22,5 +22,6 @@ brew install git \
 	tree-sitter \
 	ripgrep \
 	awscli \
+	pandoc \
 	telnet
 
