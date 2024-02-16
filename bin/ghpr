@@ -1,0 +1,60 @@
+#!/bin/bash
+
+_on_a_branch || exit 1
+
+# log messages
+MAIN=`git rev-parse --abbrev-ref origin/HEAD`
+BASE=`git merge-base $MAIN HEAD`
+
+# dump the commit messages so they look like this:
+#   commit <hashid>
+#   summary
+#
+#   body
+COMMITS=`git log --format='%s%n%n%b%n%n%n' --decorate=no $BASE..HEAD`
+COMMITS_SUMMARY=`git log --format='%s' --decorate=no $BASE..HEAD`
+TITLE=`echo "${COMMITS_SUMMARY}" | head -1`
+
+# reflow paragraphs so they don't have newlines, because gh won't ignore them
+COMMITS=`echo "$COMMITS" | pandoc -f markdown -t gfm --wrap none -`
+
+
+
+if [[ "${JIRA_BASE}" != "" ]]; then
+   # link to jira ticket
+   TICKET_NO=`_ticket`
+   TICKET_URL="${JIRA_BASE}/browse/${TICKET_NO}"
+   TICKET_SUMMARY=`jira view ${TICKET_NO} -t ticket_subject`
+   TICKET_LINK="[Ticket ${TICKET_NO}: ${TICKET_SUMMARY}](${TICKET_URL})"
+   TICKET_LINK_SED_ESCAPED=$(printf '%s\n' "$TICKET_LINK" | sed -e 's/[\/&]/\\&/g')
+fi
+
+COMMITS=`echo "$COMMITS" | sed 's/[rR]efs: '$TICKET_NO'/'"$TICKET_LINK_SED_ESCAPED"'/g' `
+
+PR_DESCRIPTION_TEMP=`mktemp`
+echo "$COMMITS" >> ${PR_DESCRIPTION_TEMP}
+
+TEMPLATE=`git rev-parse --show-toplevel`/.github/pull_request_template.md
+if [[ -e "${TEMPLATE}" ]]; then
+
+  echo "------------------------" >> ${PR_DESCRIPTION_TEMP}
+  cat "${TEMPLATE}" >> ${PR_DESCRIPTION_TEMP}
+fi
+
+"${EDITOR}" "${PR_DESCRIPTION_TEMP}"
+
+# GH_REPO=`gh repo view --json owner,name -t "{{.owner.login}}/{{.name}}"`
+gh pr create \
+	--title "${TITLE}" \
+	--body-file "${PR_DESCRIPTION_TEMP}" \
+
+# this is now generating a multi-commit pr description with the template at the bottom.
+
+# ideas for next steps:
+#   * call gh pr create, passing in this as a template
+#   * single commit pr description
+#   * title?
+#   * pull in template
+#   * >> sub in jira ticket link
+#   * pull in jira description(s)
+

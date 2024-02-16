@@ -9,6 +9,7 @@ Docker and kubernetes:
 Misc
     ts2date - convert unix timestamp into human readable
     unixtime - current time in seconds since epoch
+    tf - terraform
 
 Kubernetes
      k - kubectl
@@ -26,8 +27,9 @@ Kubernetes
 
 Git flow
     nb <tab> - new branch
-	gcommit <files> - commit (populates a message template)
+    gcommit <files> - commit (populates a message template)
     gamend -  amend comit with updated files
+    gmessage - amend comit message
     gdiff - compare main with HEAD
     gpush -  fetch, rebase, push
     rebase - fetch, rebase
@@ -38,6 +40,8 @@ EOF
 }
 HELP_COMMAND=_base_help
 
+
+alias tf='terraform'
 
 alias dc='docker-compose'
 alias dcl='docker-compose logs -f'
@@ -51,8 +55,9 @@ alias py3=python3
 export EDITOR=`which nvim || which vim || which vi`
 export GET_EDITOR=${EDITOR}
 
-alias gamend='git commit -a --amend --no-edit'
-alias gpush='rebase && safe_force_push'
+alias gamend='_there_is_a_commit_to_amend && git commit -a --amend --no-edit'
+alias gmessage='_there_is_a_commit_to_amend && git commit --amend'
+alias gpush='_on_a_branch && rebase && git push --force'
 
 function gprunesquashmerged() {
   MAIN=`git rev-parse --abbrev-ref HEAD`
@@ -130,6 +135,7 @@ function branch_status() {
   BASE=`git merge-base $MAIN HEAD`
   git log --format=oneline --decorate=no $BASE..HEAD
   git diff --name-status $BASE..HEAD
+  gh pr status --json mergeStateStatus,state,title,url,id,reviewDecision --template '{{if .currentBranch }}PR is {{.currentBranch.state}} {{.currentBranch.reviewDecision}} {{.currentBranch.url}}{{ printf "\n" }}{{ end }}'
 }
 
 function rebase_interactive() {
@@ -144,7 +150,6 @@ function gdiff() {
   BASE=`git merge-base $MAIN HEAD`
   git diff $BASE..HEAD
 }
-
 
 export PS1='\h:\W \u \$ '
 _prompt_command() {
@@ -164,6 +169,15 @@ _prompt_command() {
     local Pur='\[\e[0;35m\]'
 
     PS1+="\u@\h \W"
+
+    if command -v terraform &> /dev/null
+    then
+       CURRENT_TF=`terraform workspace show`
+       if [ $? == 0 ] && [ "${CURRENT_TF}" != "default" ]; then
+         PS1+="${BBlu} ${CURRENT_TF}${RCol}"
+       fi
+    fi
+
     if [ $EXIT != 0 ]; then
         PS1+="${Red}$ ${RCol}"      # Add red if exit code non 0
     else
@@ -177,15 +191,35 @@ fi
 
 
 function nb () {
+  if [[ "$1" == "" ]]; then
+    echo "usage: nb <branchname>"
+    return
+  fi
   if [[ "$2" == "" ]]; then
      MAIN=`git rev-parse --abbrev-ref origin/HEAD`
+     if [[ $? != 0 ]]; then
+       echo "Error: 'git rev-parse --abbrev-ref origin/HEAD' failed"
+       return 1
+     fi
   else
      MAIN=$2
   fi
 
   git fetch
+  if [[ $? != 0 ]]; then
+    echo "Error: 'git fetch' failed"
+    return 1
+  fi
   git checkout -b $1 $MAIN
+  if [[ $? != 0 ]]; then
+    echo "Error: 'git checkout -b $1 $MAIN' failed"
+    return 1
+  fi
   git push --set-upstream origin $1
+  if [[ $? != 0 ]]; then
+    echo "Error: 'git push --set-upstream origin $1' failed"
+    return 1
+  fi
 }
 
 function rebase () {
@@ -193,8 +227,30 @@ function rebase () {
   git rebase `git rev-parse --abbrev-ref origin/HEAD`
 }
 
-function safe_force_push() {
-  git push --force
+function _there_is_a_commit_to_amend() {
+  git diff-index --quiet `git rev-parse --abbrev-ref origin/HEAD`
+  CODE=$?
+  if [[ $CODE != 0 ]]; then
+    return 0
+  else
+    echo "There is no commit on this branch yet."
+    return 1
+  fi
 }
+
+function _on_a_branch() {
+  CURRENT=`git branch --show-current`
+  MAIN=`git symbolic-ref refs/remotes/origin/HEAD | sed 's@^refs/remotes/origin/@@'`
+  if [[ "${CURRENT}" == "${MAIN}" ]]; then
+    echo "The current branch is ${MAIN}, which is the main branch for this repo."
+    return 1
+  elif [[ `git rev-parse --abbrev-ref --symbolic-full-name HEAD` == "HEAD" ]]; then
+    echo "Currently on a detached head."
+    return 1
+  else
+    return 0
+  fi
+}
+
 
 eval "$(direnv hook bash)"
