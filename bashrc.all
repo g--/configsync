@@ -131,11 +131,32 @@ _window_title() {
 }
 
 function branch_status() {
+  read -r -d '' GH_TEMPLATE <<'EOT'
+    {{- if .currentBranch }}
+      {{- if eq .currentBranch.state "MERGED" -}}
+        PR is MERGED (see {{ .currentBranch.url }})
+      {{- else -}}
+        PR is {{.currentBranch.state}} {{.currentBranch.reviewDecision}} {{.currentBranch.url}}
+      {{- end -}}{{ printf "\n" }}
+    {{- end -}}
+EOT
+
+  # GH_TEMPLATE='{{if .currentBranch }}{{ if eq .currentBranch.state "MERGED" }}PR is MERGED (see {{ .currentBranch.url }}){{ else }}PR is {{.currentBranch.state}} {{.currentBranch.reviewDecision}} {{.currentBranch.url}}{{ printf "\n" }}{{ end }}{{ end }}'
+
+  PR_STATUS=`gh pr status --json mergeStateStatus,state,title,url,id,reviewDecision --template "${GH_TEMPLATE}"`
+
+  if [[ "${PR_STATUS}" == *" MERGED "* ]]; then
+    echo "${PR_STATUS}"
+
+    return 1
+  fi
+
   MAIN=`git rev-parse --abbrev-ref origin/HEAD`
   BASE=`git merge-base $MAIN HEAD`
   git log --format=oneline --decorate=no $BASE..HEAD
   git diff --name-status $BASE..HEAD
-  gh pr status --json mergeStateStatus,state,title,url,id,reviewDecision --template '{{if .currentBranch }}PR is {{.currentBranch.state}} {{.currentBranch.reviewDecision}} {{.currentBranch.url}}{{ printf "\n" }}{{ end }}'
+
+  echo "${PR_STATUS}"
 }
 
 function rebase_interactive() {
