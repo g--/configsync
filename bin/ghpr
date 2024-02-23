@@ -1,7 +1,5 @@
 #!/bin/bash
 
-_on_a_branch || exit 1
-
 # log messages
 MAIN=`git rev-parse --abbrev-ref origin/HEAD`
 BASE=`git merge-base $MAIN HEAD`
