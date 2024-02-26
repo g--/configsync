@@ -32,6 +32,8 @@ COMMITS=`echo "$COMMITS" | sed 's/[rR]efs: '$TICKET_NO'/'"$TICKET_LINK_SED_ESCAP
 PR_DESCRIPTION_TEMP=`mktemp`
 echo "$COMMITS" >> ${PR_DESCRIPTION_TEMP}
 
+LINES=`wc -l "${PR_DESCRIPTION_TEMP}" | cut -w -f 2`
+
 TEMPLATE=`git rev-parse --show-toplevel`/.github/pull_request_template.md
 if [[ -e "${TEMPLATE}" ]]; then
 
@@ -39,7 +41,8 @@ if [[ -e "${TEMPLATE}" ]]; then
   cat "${TEMPLATE}" >> ${PR_DESCRIPTION_TEMP}
 fi
 
-"${EDITOR}" "${PR_DESCRIPTION_TEMP}"
+
+"${EDITOR}" +"${LINES}" "${PR_DESCRIPTION_TEMP}"
 
 # GH_REPO=`gh repo view --json owner,name -t "{{.owner.login}}/{{.name}}"`
 gh pr create \
