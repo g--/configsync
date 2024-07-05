@@ -36,6 +36,7 @@ Git flow
     rebase_interactive - interactive rebase from trunk up
     branch_status - summary of what's in this branch
     gprunesquashmerged - prune old branches
+    ghg - github grep
 EOF
 }
 HELP_COMMAND=_base_help
@@ -58,6 +59,9 @@ export GET_EDITOR=${EDITOR}
 alias gamend='_there_is_a_commit_to_amend && git commit -a --amend --no-edit'
 alias gmessage='_there_is_a_commit_to_amend && git commit --amend'
 alias gpush='_on_a_branch && rebase && git push --force'
+
+# idea: use --template to include the url.
+alias ghg='gh search code --owner ${GITHUB_ORG}'
 
 function gprunesquashmerged() {
   MAIN=`git rev-parse --abbrev-ref HEAD`
