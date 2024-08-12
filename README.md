@@ -8,6 +8,11 @@ All
 
 ```
 cat << EOF >> ~/.gitconfig
+[user]
+	name = Full Name
+	email = some_email@company.com
+	signingkey = ABCDEFABCDEFABCA
+
 [include] 
     path = ~/.configsync/git/config
 EOF
