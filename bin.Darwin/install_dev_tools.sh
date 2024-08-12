@@ -13,15 +13,16 @@ brew install git \
 	fzf \
 	helm \
 	jq \
-	joplin-cli \
 	kubernetes-cli \
 	krew \
 	neovim \
-	python@3.11 \
+	python@3.12 \
 	the_silver_searcher \
 	tree-sitter \
 	ripgrep \
 	awscli \
 	pandoc \
+	yarn \
+	node \
 	telnet
 
