@@ -12,6 +12,8 @@ cat << EOF >> ~/.gitconfig
     path = ~/.configsync/git/config
 EOF
 
+mkdir ~/.gnupg
+chmod og-rx ~/.gnupg
 ```
 
 Darwin
