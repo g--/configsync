@@ -25,5 +25,9 @@ brew install --quiet \
 	pandoc \
 	yarn \
 	node \
+    font-fira-code \
+    font-fira-code-nerd-font \
+    font-fira-mono \
+    font-fira-mono-nerd-font \
 	telnet
 

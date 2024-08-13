@@ -10,58 +10,141 @@ if wezterm.config_builder then
   config = wezterm.config_builder()
 end
 
--- This is where you actually apply your config choices
 
--- For example, changing the color scheme:
-config.color_scheme = 'AdventureTime'
-config.font = wezterm.font 'FiraCode'
-config.font_size = 16
+config.color_scheme = 'Solarized (light) (terminal.sexy)'
+config.font = wezterm.font_with_fallback {
+	'Fira Code Nerd',
+	'Fira Code',
+}
+
+config.bold_font = auto
+config.italic_font = auto
+config.bold_italic_font = auto
+config.disable_ligatures = never
+-- url_prefixes = http https file ftp
+config.open_url_with = open
+config.strip_trailing_spaces=smart
+-- config.term=xterm-256color
+
 config.show_update_window = false
 config.check_for_updates = false
 
+config.adjust_window_size_when_changing_font_size = false
+
 local act = wezterm.action
+
+local is_linux = function()
+	return wezterm.target_triple:find("linux") ~= nil
+end
+
+local is_darwin = function()
+	return wezterm.target_triple:find("darwin") ~= nil
+end
+
+local super_key
+local ctrl_key
+local meta_key
+
+if is_darwin then 
+	config.font_size = 12
+
+	-- left command
+	super_key = "SUPER"
+
+	-- ctrl
+	ctrl_key = "CTRL"
+
+	-- Option key
+	meta_key = "META"
+else
+	config.font_size = 16
+
+	super_key = "CTRL"
+
+	-- left command (logo key)
+	ctrl_key = "SUPER"
+
+	meta_key = "META"
+end
+
 
 config.keys = {
 	-- copy pasta
 	{
 		key = 'c',
-		mods = 'CTRL',
+		mods = super_key,
 		action = wezterm.action.CopyTo 'ClipboardAndPrimarySelection'
 	},
 	{
 		key = 'v',
-		mods = 'CTRL',
+		mods = super_key,
 		action = act.PasteFrom 'Clipboard'
 	},
-	-- TODO: sub-windows?
+	-- Panes
+	{
+		key = 'f',
+		mods = meta_key,
+		action = wezterm.action.TogglePaneZoomState
+	},
+	{
+		key = '_',
+		mods = super_key,
+		action = wezterm.action.SplitVertical
+	},
+	{
+		key = '|',
+		mods = super_key,
+		action = wezterm.action.SplitHorizontal
+	},
+	{
+		key = 'h',
+		mods = super_key,
+		action = wezterm.action.ActivatePaneDirection 'Left'
+	},
+	{
+		key = 'l',
+		mods = super_key,
+		action = wezterm.action.ActivatePaneDirection 'Right'
+	},
+	{
+		key = 'j',
+		mods = super_key,
+		action = wezterm.action.ActivatePaneDirection 'Down'
+	},
+	{
+		key = 'k',
+		mods = super_key,
+		action = wezterm.action.ActivatePaneDirection 'Up'
+	},
+	
 	-- TODO: windows
 	{
 		key = 'n',
-		mods = 'CTRL',
+		mods = super_key,
 		action = wezterm.action.SpawnWindow
 	},
 
 	-- tabs
 	{
 		key = 't',
-		mods = 'CTRL',
+		mods = super_key,
 		action = act.SpawnTab 'CurrentPaneDomain',
 	},
     {
 		key = 'LeftArrow',
-		mods = 'CTRL',
+		mods = super_key,
 		action = act.ActivateTabRelative(-1)
 	},
     {
 		key = 'RightArrow',
-		mods = 'CTRL',
+		mods = super_key,
 		action = act.ActivateTabRelative(1)
 	},
 
 	-- control keys
 	{
 		key = 'l',
-		mods = 'SUPER',
+		mods = ctrl_key,
 		action = act.SendKey {
 			key = 'l',
 			mods = 'CTRL',
@@ -69,7 +152,7 @@ config.keys = {
 	},
 	{
 		key = 'd',
-		mods = 'SUPER',
+		mods = ctrl_key,
 		action = act.SendKey {
 			key = 'd',
 			mods = 'CTRL',
@@ -77,7 +160,7 @@ config.keys = {
 	},
 	{
 		key = 'c',
-		mods = 'SUPER',
+		mods = ctrl_key,
 		action = act.SendKey {
 			key = 'c',
 			mods = 'CTRL',
@@ -85,7 +168,7 @@ config.keys = {
 	},
 	{
 		key = 'a',
-		mods = 'SUPER',
+		mods = ctrl_key,
 		action = act.SendKey {
 			key = 'a',
 			mods = 'CTRL',
@@ -93,7 +176,7 @@ config.keys = {
 	},
 	{
 		key = 'e',
-		mods = 'SUPER',
+		mods = ctrl_key,
 		action = act.SendKey {
 			key = 'e',
 			mods = 'CTRL',
@@ -101,7 +184,6 @@ config.keys = {
 	},
 }
 
-config.color_scheme = 'Solarized (light) (terminal.sexy)'
 
 
 -- and finally, return the configuration to wezterm
