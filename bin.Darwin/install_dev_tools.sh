@@ -1,7 +1,8 @@
 
 
-brew tap jorgelbg/tap
-brew install git \
+brew tap --quiet jorgelbg/tap
+brew install --quiet \
+    git \
 	bash-completion \
 	ack  \
 	direnv  \

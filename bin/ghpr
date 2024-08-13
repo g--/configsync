@@ -16,7 +16,7 @@ COMMITS_SUMMARY=`git log --format='%s' --decorate=no $BASE..HEAD`
 TITLE=`echo "${COMMITS_SUMMARY}" | head -1`
 
 # reflow paragraphs so they don't have newlines, because gh won't ignore them
-COMMITS=`echo "$COMMITS" | pandoc -f markdown -t gfm --wrap none --lua-filter /Users/geoff.o/.configsync/lib/pandoc_output_backticks_always.lua -`
+COMMITS=`echo "$COMMITS" | pandoc -f markdown -t gfm --wrap none --lua-filter /Users/geoff.o/.gsync/lib/pandoc_output_backticks_always.lua -`
 
 
 

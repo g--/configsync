@@ -1,0 +1,8 @@
+[user]
+	name = Full Name
+	email = some_email@company.com
+	signingkey = ABCDEFABCDEFABCA
+
+[include] 
+    path = ~/.gsync/git/config
+

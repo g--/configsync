@@ -2,7 +2,7 @@
 	name = Geoff
 
 [commit]
-    template = ~/.configsync/git/message
+    template = ~/.gsync/git/message
 	gpgsign = true
 	
 [gpg]
