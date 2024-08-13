@@ -33,7 +33,7 @@ install_darwin: install
 
 .PHONY: install_linux
 install_linux: install
-	@grep -q '.gsync/bashrc' ~/.bashrc || (cat ~/.gsync/bash_template >> ~/.bashrc && echo "remember to customize ~/.bash_profile")
+	@grep -q '.gsync/bashrc' ~/.bashrc || (cat ~/.gsync/bash_template >> ~/.bashrc && echo "remember to customize ~/.bashrc")
 	@./bin.Linux/install_dev_tools.sh
 
 
