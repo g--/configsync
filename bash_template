@@ -1,0 +1,14 @@
+#export GITHUB_ORG=company
+#export JIRA_BASE=https://company.atlassian.net/jira
+#
+#function _local_help {
+#cat <<EOF
+#Local Aliases
+#    s - status of this branch
+#EOF
+#_base_help
+#}
+#
+#
+#HELP_COMMAND=_local_help
+source ~/.gsync/bashrc

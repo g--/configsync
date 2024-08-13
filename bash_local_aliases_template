@@ -1,0 +1,13 @@
+#function _local_help {
+#cat <<EOF
+#Local Aliases
+#    s - status of this branch
+#EOF
+#_base_help
+#}
+#
+#
+#HELP_COMMAND=_local_help
+#
+# alias s=
+

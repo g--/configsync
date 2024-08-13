@@ -41,7 +41,6 @@ EOF
 }
 HELP_COMMAND=_base_help
 
-
 alias tf='terraform'
 
 alias dc='docker-compose'
@@ -277,5 +276,7 @@ function _on_a_branch() {
   fi
 }
 
+# after, so local can override
+source ~/.bash_local_aliases
 
 eval "$(direnv hook bash)"

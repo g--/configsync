@@ -1,5 +1,5 @@
 
-CONFIG_SYNC_ROOT=~/.configsync
+CONFIG_SYNC_ROOT=~/.gsync
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
