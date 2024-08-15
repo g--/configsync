@@ -4,7 +4,7 @@ CONFIG_SYNC_ROOT=~/.gsync
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 
-PATH=${HOME}/bin:${CONFIG_SYNC_ROOT}/bin:${HOME}/.local/bin:${HOME}/.krew/bin:/usr/local/bin:/usr/local/sbin:/bin:/sbin:/usr/bin:/usr/sbin:/snap/bin
+PATH=${HOME}/bin:${CONFIG_SYNC_ROOT}/bin:${HOME}/.local/bin:${HOME}/.pyenv:${HOME}/.krew/bin:/usr/local/bin:/usr/local/sbin:/bin:/sbin:/usr/bin:/usr/sbin:/snap/bin
 export PATH
 
 SSH_AUTH_SOCK=~/.gnupg/S.gpg-agent.ssh; export SSH_AUTH_SOCK
@@ -35,10 +35,6 @@ if [ -e ${DIR}/bashrc.${OSTYPE} ]; then
   . ${DIR}/bashrc.${OSTYPE}
 fi
 
-# ~/bin takes priority.
-if [ -d ~/bin ]; then
-PATH=~/bin:${PATH}
-export PATH
-fi
+eval "$(pyenv init -)"
 
 . ${DIR}/bashrc.all

@@ -2,8 +2,12 @@
 
 brew tap --quiet jorgelbg/tap
 brew install --quiet \
-    git \
+	git \
 	bash-completion \
+	font-fira-code \
+	font-fira-code-nerd-font \
+	font-fira-mono \
+	font-fira-mono-nerd-font \
 	ack  \
 	direnv  \
 	pinentry-mac  \
@@ -18,6 +22,8 @@ brew install --quiet \
 	krew \
 	neovim \
 	python@3.12 \
+	pyenv \
+	tfenv \
 	the_silver_searcher \
 	tree-sitter \
 	ripgrep \
@@ -25,9 +31,7 @@ brew install --quiet \
 	pandoc \
 	yarn \
 	node \
-    font-fira-code \
-    font-fira-code-nerd-font \
-    font-fira-mono \
-    font-fira-mono-nerd-font \
+	gh \
+	google-cloud-sdk \
 	telnet
 
