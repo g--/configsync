@@ -80,11 +80,11 @@ config.keys = {
 		mods = super_key,
 		action = act.PasteFrom 'Clipboard'
 	},
-	{
-		key = 'g',
-		mods = super_key,
-		action = act.CopyMode
-	},
+-- 	{
+-- 		key = 'g',
+-- 		mods = super_key,
+-- 		action = act.CopyMode
+-- 	},
 	-- Panes
 	{
 		key = 'f',
