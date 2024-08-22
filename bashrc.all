@@ -3,15 +3,15 @@ function _base_help {
 
 
 cat <<EOF
-Docker and kubernetes:
+󰡨 Docker and kubernetes 󰡨 
     dc docker-compose
 
-Misc
+󰪴 Misc 󰪴 
     ts2date - convert unix timestamp into human readable
     unixtime - current time in seconds since epoch
     tf - terraform
 
-Kubernetes
+󱃾 Kubernetes 󱃾  
      k - kubectl
      kg - 'kubectl get'
      kga - 'kubectl get --all-namespaces'
@@ -25,7 +25,7 @@ Kubernetes
      kgn <namespace> - dump all resources for the given namespace
      kshell - create a pod and execute a shell on it
 
-Git flow
+ Git flow  
     nb <tab> - new branch
     gcommit <files> - commit (populates a message template)
     gamend -  amend comit with updated files
@@ -34,6 +34,7 @@ Git flow
     gpush -  fetch, rebase, push
     rebase - fetch, rebase
     rebase_interactive - interactive rebase from trunk up
+    main - checkout origin/main
     branch_status - summary of what's in this branch
     gprunesquashmerged - prune old branches
     ghg - github grep
@@ -250,6 +251,11 @@ function nb () {
 function rebase () {
   git fetch
   git rebase `git rev-parse --abbrev-ref origin/HEAD`
+}
+
+function main() {
+  git fetch
+  git checkout `git rev-parse --abbrev-ref origin/HEAD`
 }
 
 function _there_is_a_commit_to_amend() {
