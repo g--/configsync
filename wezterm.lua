@@ -67,6 +67,47 @@ else
 	meta_key = "META"
 end
 
+config.bypass_mouse_reporting_modifiers = super_key
+config.hyperlink_rules = {
+-- not working yet. Try looking at https://github.com/wez/wezterm/issues/3803
+  -- Matches: a URL in parens: (URL)
+  {
+    regex = '\\((\\w+://\\S+)\\)',
+    format = '$1',
+    highlight = 1,
+  },
+  -- Then handle URLs not wrapped in brackets
+  {
+    regex = '\\b\\w+://\\S+[)/a-zA-Z0-9-]+',
+    format = '$0',
+  },
+}
+
+-- https://example.com/
+-- [a link](https://example.com/)
+
+config.mouse_bindings = {
+  {
+    event = { Down = { streak = 1, button = "Left" } },
+    mods = "NONE",
+    action = wezterm.action { SelectTextAtMouseCursor = "Cell" }
+  },
+
+	-- Change the default click behavior so that it only selects
+	-- text and doesn't open hyperlinks
+	{
+	  event={Up={streak=1, button="Left"}},
+	  mods="NONE",
+	  action=act.CompleteSelection 'ClipboardAndPrimarySelection',
+	},
+
+	-- and make CTRL-Click open hyperlinks
+	{
+	  event={Up={streak=1, button="Left"}},
+	  mods=super_key,
+	  action=act.OpenLinkAtMouseCursor,
+	},
+}
 
 config.keys = {
 	-- copy pasta
