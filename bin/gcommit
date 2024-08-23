@@ -2,7 +2,7 @@
 
 TEMPLATE_FILE=`mktemp`
 
-echo `cat ~/.gsync/git/commit_types | fzf` >> $TEMPLATE_FILE
+echo `cat ${CONFIG_SYNC_ROOT}/git/commit_types | fzf` >> $TEMPLATE_FILE
 
 echo ""  >> $TEMPLATE_FILE
 

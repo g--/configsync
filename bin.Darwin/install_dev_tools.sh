@@ -24,6 +24,8 @@ brew install --quiet \
 	python@3.12 \
 	pyenv \
 	tfenv \
+	go \
+	gopls \
 	the_silver_searcher \
 	tree-sitter \
 	ripgrep \
