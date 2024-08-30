@@ -29,6 +29,8 @@ config.strip_trailing_spaces=smart
 config.show_update_window = false
 config.check_for_updates = false
 
+config.audible_bell = 'Disabled'
+
 config.adjust_window_size_when_changing_font_size = false
 
 local act = wezterm.action
