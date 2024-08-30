@@ -16,6 +16,7 @@ brew install --quiet \
 	wget  \
 	gnupg \
 	fzf \
+	bkt \
 	helm \
 	jq \
 	kubernetes-cli \
@@ -24,6 +25,7 @@ brew install --quiet \
 	python@3.12 \
 	pyenv \
 	tfenv \
+	terraform-ls \
 	go \
 	gopls \
 	the_silver_searcher \
