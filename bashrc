@@ -36,6 +36,8 @@ if [ -e ${DIR}/bashrc.${OSTYPE} ]; then
   . ${DIR}/bashrc.${OSTYPE}
 fi
 
-eval "$(pyenv init -)"
+if [ $(type -P pyenv) ]; then
+	eval "$(pyenv init -)"
+fi
 
 . ${DIR}/bashrc.all

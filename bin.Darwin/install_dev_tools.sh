@@ -22,12 +22,16 @@ brew install --quiet \
 	kubernetes-cli \
 	krew \
 	neovim \
+	python-lsp-server \
+	terraform-lsp \
 	python@3.12 \
 	pyenv \
 	tfenv \
 	terraform-ls \
 	go \
 	gopls \
+	shellcheck \
+	black \
 	the_silver_searcher \
 	tree-sitter \
 	ripgrep \

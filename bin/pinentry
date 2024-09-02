@@ -1,0 +1,20 @@
+#!/bin/bash
+
+# this appears to work, but getting gpg-agent to point to it in a portable way, I haven't figured out.
+
+if [ -e /opt/homebrew/bin/pinentry-mac ]; then
+  exec /opt/homebrew/bin/pinentry-mac "$@"
+elif [ -e /bin/pinentry-gnome3 ]; then
+  exec /bin/pinentry-gnome3 "$@"
+elif [ -e /bin/pinentry-x11 ]; then
+  exec /bin/pinentry-x11 "$@"
+elif [ -e /bin/pinentry-curses ]; then
+  echo "warning: falling back on a non-graphical pinentry" >&2
+  exec /bin/pinentry-curses "$@"
+elif [ -e /bin/pinentry ]; then
+  echo "warning: falling back on a non-graphical pinentry" >&2
+  exec /bin/pinentry "$@"
+else
+  echo "no pinentry found" >&2
+  exit 1
+fi

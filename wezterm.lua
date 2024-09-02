@@ -13,17 +13,18 @@ end
 
 config.color_scheme = 'Solarized (light) (terminal.sexy)'
 config.font = wezterm.font_with_fallback {
-	'Fira Code Nerd',
+	-- 'DejaVuSansM Nerd Mono',
+	-- 'Fira Code Nerd',
 	'Fira Code',
 }
 
-config.bold_font = auto
-config.italic_font = auto
-config.bold_italic_font = auto
-config.disable_ligatures = never
+-- config.bold_font = auto
+-- config.italic_font = auto
+-- config.bold_italic_font = auto
+-- config.disable_ligatures = never
 -- url_prefixes = http https file ftp
-config.open_url_with = open
-config.strip_trailing_spaces=smart
+-- config.open_url_with = open
+-- config.strip_trailing_spaces=smart
 -- config.term=xterm-256color
 
 config.show_update_window = false
@@ -58,7 +59,9 @@ if is_darwin then
 
 	-- Option key
 	meta_key = "META"
-else
+end
+
+if is_linux then 
 	config.font_size = 16
 
 	super_key = "CTRL"
