@@ -59,9 +59,7 @@ if is_darwin then
 
 	-- Option key
 	meta_key = "META"
-end
-
-if is_linux then 
+elseif is_linux then 
 	config.font_size = 16
 
 	super_key = "CTRL"
@@ -70,6 +68,19 @@ if is_linux then
 	ctrl_key = "SUPER"
 
 	meta_key = "META"
+else
+	-- something's wrong
+	config.color_scheme = 'Solarized (dark) (terminal.sexy)'
+
+	config.font_size = 16
+
+	super_key = "CTRL"
+
+	-- left command (logo key)
+	ctrl_key = "SUPER"
+
+	meta_key = "META"
+
 end
 
 config.bypass_mouse_reporting_modifiers = super_key
