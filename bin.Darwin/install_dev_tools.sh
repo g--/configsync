@@ -2,6 +2,7 @@
 
 brew tap --quiet jorgelbg/tap
 brew install --quiet \
+	coreutils \
 	git \
 	bash-completion \
 	font-fira-code \
