@@ -183,7 +183,8 @@ _prompt_command() {
 	history -a
 
   THING=`_window_title`
-  echo -ne "\033];${THING}\007";
+  #echo -ne "\033];${THING}\007";
+  echo -ne "\x1b]1;${THING}\x1b\\";
 
     PS1=""
 
@@ -211,7 +212,10 @@ _prompt_command() {
     fi
 }
 
-if [ $ITERM_SESSION_ID ]; then
+# Do this before setting prompt command
+eval "$(direnv hook bash)"
+
+if [ $ITERM_SESSION_ID  ] || [ "$TERM_PROGRAM" == "WezTerm" ]; then
   export PROMPT_COMMAND='_prompt_command'
 fi
 
@@ -286,4 +290,3 @@ function _on_a_branch() {
 # after, so local can override
 source ~/.bash_local_aliases
 
-eval "$(direnv hook bash)"
