@@ -7,6 +7,11 @@ end
 function _window_title
   if git rev-parse --git-dir &> /dev/null
      set ROOT (git rev-parse --show-toplevel)
+	 set repo_name (path basename $ROOT)
+	 set branch_name (_branch_no_ticket)
+	 if [ "$branch_name" = "HEAD" ]
+		 echo -n "$repo_name: "
+	 end
 	 # echo -n "${ROOT##*/}: "
      echo -n (_branch_no_ticket)
   else
