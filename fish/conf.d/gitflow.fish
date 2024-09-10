@@ -92,4 +92,12 @@ function _main
   command git rev-parse --abbrev-ref origin/HEAD
 end
 
+if set -q JIRA_BASE
+	complete -c nb -a "(_choose_jira_ticket)" -f
 
+	function _choose_jira_ticket
+		set ticket (jira now_as_branch_name | fzf | string split / )
+		echo "$ticket[1]/"
+	end
+
+end
