@@ -99,5 +99,9 @@ if set -q JIRA_BASE
 		set ticket (jira now_as_branch_name | fzf | string split / )
 		echo "$ticket[1]/"
 	end
-
 end
+
+if set -q GITHUB_ORG
+	complete -c git -n "__fish_seen_subcommand_from clone" -a "(repo_list_for_org | fzf)" -f
+end
+

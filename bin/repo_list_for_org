@@ -1,0 +1,3 @@
+#!/bin/bash
+
+bkt --ttl 52w --stale 1w -- gh repo list $GITHUB_ORG -L 99999 --json name,sshUrl | jq -r '.[].sshUrl'
