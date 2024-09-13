@@ -1,0 +1,27 @@
+#!/bin/bash
+
+if [ "${JIRA_PROJECT}" != "" ]; then
+	exec jira create
+# for later?
+read -r -d '' QUERY << END_OF_QUERY
+fields:
+  project:
+    key: SCORE
+  issuetype:
+    name: Story
+  summary: >-
+  	$1
+    
+  priority: # Values: Critical , High, Medium, Low, Informational, None, 
+    name: 
+  description: |~
+    
+  assignee:
+    emailAddress: 
+  reporter:
+    emailAddress: ${USER}@${ORG_DOMAIN}
+END_OF_QUERY
+
+else
+	echo "no known ticket thing configured
+fi
