@@ -1,0 +1,9 @@
+#!/bin/bash
+
+# can I check all comments are resolved?
+
+# check it's approved with gh pr view --json reviewDecision,mergeable 
+#    .mergable = "MERGEABLE"
+#    .reviewDecision = "APPROVED"
+#    .state = "OPEN"
+# gh pr merge --rebase
