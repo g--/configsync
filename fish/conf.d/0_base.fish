@@ -9,7 +9,7 @@ else
 end
 
 
-set EDITOR (which nvim || which vim || which vi)
+set -gx EDITOR (which nvim || which vim || which vi)
 function vi
 	command $EDITOR $argv
 end
