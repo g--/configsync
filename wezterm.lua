@@ -1,7 +1,11 @@
--- Pull in the wezterm API
+local employee_modules = os.getenv("HOME") .. "/.esync/individual/" .. os.getenv("USER") .. "/wezterm"
+local shared_company_modules = os.getenv("HOME") .. "/.esync/shared/wezterm"
+package.path = package.path .. ";" .. employee_modules .. "/?.lua" .. ";" .. shared_company_modules .. "/?.lua"
+
 local wezterm = require 'wezterm'
 
 -- This table will hold the configuration.
+-- https://wezfurlong.org/wezterm/config/lua/config/index.html
 local config = {}
 
 -- In newer versions of wezterm, use the config_builder which will
@@ -85,10 +89,27 @@ end
 
 config.bypass_mouse_reporting_modifiers = super_key
 config.hyperlink_rules = {
--- not working yet. Try looking at https://github.com/wez/wezterm/issues/3803
   -- Matches: a URL in parens: (URL)
   {
     regex = '\\((\\w+://\\S+)\\)',
+    format = '$1',
+    highlight = 1,
+  },
+  -- Matches: a URL in brackets: [URL]
+  {
+    regex = '\\[(\\w+://\\S+)\\]',
+    format = '$1',
+    highlight = 1,
+  },
+  -- Matches: a URL in curly braces: {URL}
+  {
+    regex = '\\{(\\w+://\\S+)\\}',
+    format = '$1',
+    highlight = 1,
+  },
+  -- Matches: a URL in angle brackets: <URL>
+  {
+    regex = '<(\\w+://\\S+)>',
     format = '$1',
     highlight = 1,
   },
@@ -97,10 +118,35 @@ config.hyperlink_rules = {
     regex = '\\b\\w+://\\S+[)/a-zA-Z0-9-]+',
     format = '$0',
   },
+  -- implicit mailto link
+  {
+    regex = '\\b\\w+@[\\w-]+(\\.[\\w-]+)+\\b',
+    format = 'mailto:$0',
+  },
 }
 
--- https://example.com/
--- [a link](https://example.com/)
+-- todo: make this conditional on existing
+function isModuleAvailable(name)
+  if package.loaded[name] then
+    return true
+  else
+    for _, searcher in ipairs(package.searchers or package.loaders) do
+      local loader = searcher(name)
+      if type(loader) == 'function' then
+        package.preload[name] = loader
+        return true
+      end
+    end
+    return false
+  end
+end
+
+if isModuleAvailable("company_customizations") then
+	require('company_customizations').init(
+		config.hyperlink_rules
+		)
+end
+
 
 config.mouse_bindings = {
   {
