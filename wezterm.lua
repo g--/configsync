@@ -52,7 +52,7 @@ local super_key
 local ctrl_key
 local meta_key
 
-if is_darwin then 
+if is_darwin() then 
 	config.font_size = 12
 
 	-- left command
@@ -63,7 +63,7 @@ if is_darwin then
 
 	-- Option key
 	meta_key = "META"
-elseif is_linux then 
+elseif is_linux() then 
 	config.font_size = 16
 
 	super_key = "CTRL"
