@@ -64,7 +64,7 @@ if is_darwin() then
 	-- Option key
 	meta_key = "META"
 elseif is_linux() then 
-	config.font_size = 16
+	config.font_size = 14
 
 	super_key = "CTRL"
 
@@ -76,7 +76,7 @@ else
 	-- something's wrong
 	config.color_scheme = 'Solarized (dark) (terminal.sexy)'
 
-	config.font_size = 16
+	config.font_size = 14
 
 	super_key = "CTRL"
 
