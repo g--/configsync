@@ -1,5 +1,5 @@
 
-if type -P brew
+if type -P brew 2 &> /dev/null
     fish_add_path /opt/homebrew/bin /opt/homebrew/sbin
 	set -gx GNU_DATE gdate
 

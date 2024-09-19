@@ -1,4 +1,6 @@
 
 if status is-interactive
-	type -P pyenv; and pyenv init - | source
+	if type -P pyenv &> /dev/null
+		pyenv init - | source
+	end
 end
