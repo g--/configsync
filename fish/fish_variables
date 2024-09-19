@@ -54,7 +54,7 @@ SETUVAR fish_pager_color_selected_background:\x2d\x2dbackground\x3dwhite
 SETUVAR fish_pager_color_selected_completion:\x1d
 SETUVAR fish_pager_color_selected_description:\x1d
 SETUVAR fish_pager_color_selected_prefix:\x1d
-SETUVAR fish_user_paths:/opt/homebrew/bin\x1e/opt/homebrew/sbin
+SETUVAR fish_user_paths:/Users/geoff\x2eo/\x2eesync/shared/bin\x1e/opt/homebrew/bin\x1e/opt/homebrew/sbin
 SETUVAR tide_aws_bg_color:FF9900
 SETUVAR tide_aws_color:232F3E
 SETUVAR tide_aws_icon:\uf270
