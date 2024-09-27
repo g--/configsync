@@ -1,0 +1,13 @@
+#!/bin/bash
+
+TICKET=$(_ticket)
+
+if [[ "${TICKET}" == "" ]]; then
+	echo "no ticket found. Refusing to make a new namespace"
+	exit 1
+fi
+
+terraform state pull > default.tfstate
+terraform workspace new `_ticket`
+terraform state push --force default.tfstate
+
