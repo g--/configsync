@@ -27,22 +27,24 @@ function ghg
 end
 
 function nb
-  if [ "{$argv[1]}" = "" ]
+  if not count argv
     echo "usage: nb <branchname>"
     return
   end
+
   set branchname $argv[1]
 
-  if [ "{$argv[2]}" = "" ]
-     set MAIN (_main)
-  else
+  if [ (count $argv) = "2" ]
      set MAIN $argv[2]
+  else
+     set MAIN (_main)
   end
 
   if not git fetch
     echo "Error: 'git fetch' failed"
     return 1
   end
+
   if not git checkout -b $branchname $MAIN
     echo "Error: 'git checkout -b $branchname $MAIN' failed"
     return 1
@@ -51,6 +53,8 @@ function nb
     echo "Error: 'git push --set-upstream origin $branchname' failed"
     return 1
   end
+
+  echo "created branch $branchname from $MAIN"
 end
 
 function rebase
