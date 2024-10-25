@@ -53,6 +53,7 @@ alias py2=python2
 alias py=python3
 alias py3=python3
 
+export BKT_CACHE_DIR=~/.cache/bkt
 export EDITOR=`which nvim || which vim || which vi`
 export GET_EDITOR=${EDITOR}
 
