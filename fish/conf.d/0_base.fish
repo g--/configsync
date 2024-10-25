@@ -16,6 +16,10 @@ end
 
 set -gx CONFIG_SYNC_ROOT $HOME/.gsync
 
+if test -d $HOME/.cache/bkt
+    set -gx BKT_CACHE_DIR $HOME/.cache/bkt
+end
+
 set -gx PATH \
 	$HOME/bin \
 	$CONFIG_SYNC_ROOT/bin \
