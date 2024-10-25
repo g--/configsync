@@ -3,41 +3,41 @@
 brew tap --quiet jorgelbg/tap
 brew install --quiet \
 	coreutils \
-	git \
 	bash-completion \
+	less \
+	neovim \
+	curl  \
+	wget  \
+	ripgrep \
+	watch  \
+	git \
+	gnupg \
+	pinentry-mac  \
+	pinentry-touchid  \
+	bkt \
+	fzf \
+	jq \
 	font-fira-code \
 	font-fira-code-nerd-font \
 	font-fira-mono \
 	font-fira-mono-nerd-font \
-	ack  \
 	direnv  \
-	pinentry-mac  \
-	pinentry-touchid  \
-	watch  \
-	wget  \
-	gnupg \
-	fzf \
-	bkt \
-	helm \
-	jq \
+	tree-sitter \
+	pandoc \
 	kubernetes-cli \
+	helm \
 	krew \
-	neovim \
+	pyenv \
+	tfenv \
 	python-lsp-server \
 	terraform-lsp \
 	python@3.12 \
-	pyenv \
-	tfenv \
 	terraform-ls \
 	go \
 	gopls \
 	shellcheck \
 	black \
-	the_silver_searcher \
-	tree-sitter \
-	ripgrep \
 	awscli \
-	pandoc \
 	yarn \
 	node \
 	gh \
