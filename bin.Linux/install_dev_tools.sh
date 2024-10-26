@@ -18,8 +18,6 @@ apt install \
 	direnv \
 	tree-sitter-cli \
 	pandoc \
-	pyenv \
-	tfenv \
 	python3-lsprotocol \
     python3-pylsp-black \
 
