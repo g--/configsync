@@ -2,6 +2,7 @@
 
 brew tap --quiet jorgelbg/tap
 brew install --quiet \
+	karabiner-elements \
 	coreutils \
 	bash-completion \
 	less \
