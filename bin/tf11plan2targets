@@ -1,0 +1,11 @@
+#!/bin/bash
+
+
+echo "terraform apply \\"
+# not a great idea, but sometimes you have to.
+terraform plan -no-color \
+	| perl -n -e 'print "  -target \"$2\" \\\n" if m/^(  ~|-\/\+)\s+([^\[\] \t\n]+)/ and $2 ne "update" and $2 ne "destroy" ' \
+	| sort -u
+
+echo "  "
+echo "  "
