@@ -100,7 +100,7 @@ if set -q JIRA_BASE
 	complete -c nb -a "(_choose_jira_ticket)" -f
 
 	function _choose_jira_ticket
-		set ticket (jira now_as_branch_name | fzf | string split / )
+		set ticket (jira now_as_branch_name | fzf --preview-label 'Ticket details' --preview 'jira view (echo {} | string split /)[1]' | string split / )
 		echo "$ticket[1]/"
 	end
 end
