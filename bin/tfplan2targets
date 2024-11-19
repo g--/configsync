@@ -1,0 +1,11 @@
+#!/bin/bash
+
+
+echo "terraform apply \\"
+# not a great idea, but sometimes you have to.
+terraform plan -no-color \
+	| perl -n -e 'print "  -target \"$1\" \\\n" if m/\# ([^\[\]]+)\S* will be/ ' \
+	| sort -u
+
+echo "  "
+echo "  "
