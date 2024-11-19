@@ -20,6 +20,7 @@ install:
 .PHONY: install_darwin
 install_darwin: install
 	@./bin.Darwin/install_dev_tools.sh
+	@[ -e ~/.config/karabiner ] || ln -s ~/.gsync/karabiner ~/.config/ .config/karabiner
 	@[ -e ~/Library/LaunchAgents/ca.oakham.geoff.guistart.plist ] || ln -s ~/.gsync/ca.oakham.geoff.guistart.plist ~/Library/LaunchAgents/
 	@launchctl unload ~/Library/LaunchAgents/ca.oakham.geoff.guistart.plist  > /dev/null 2>&1
 	@launchctl load ~/Library/LaunchAgents/ca.oakham.geoff.guistart.plist
