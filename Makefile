@@ -45,3 +45,11 @@ uninstall:
 	launchctl unload ~/.gsync/ca.oakham.geoff.controlkeyremap.plist
 	rm ~/Library/LaunchAgents/ca.oakham.geoff.controlkeyremap.plist
 
+.PHONY: compile
+compile: wordlist.en-ca.add.spl
+
+wordlist.en-ca.add.spl: wordlist.en-ca.add
+	nvim '+mkspell! wordlist.en-ca.add' +qall
+
+
+
