@@ -8,3 +8,4 @@ function unixtime
 end
 
 
+# set -Ux LESS -R
