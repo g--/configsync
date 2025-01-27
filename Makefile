@@ -13,9 +13,9 @@ install:
 
 	@[ -e ~/.gitconfig ] || (cp git/gitconfig_template ~/.gitconfig && echo "Rememeber to peronsalize ~/.gitconfig")
 	@[ -e ~/.bash_local_aliases ] || cp bash_local_aliases_template ~/.bash_local_aliases
-	@[ -e ~/.bash_local_aliases ] || cp bash_local_aliases_template ~/.bash_local_aliases
 	@[ -e ~/.config/nvim ] || git clone git@github.com:g--/nvim-config.git ~/.config/nvim
 	@nvim --headless "+Lazy! install" +qa
+	@go install github.com/g--/standup@upgrade
 
 .PHONY: install_darwin
 install_darwin: install
