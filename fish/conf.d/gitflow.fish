@@ -1,3 +1,5 @@
+set -xU GITHUB_USER 'g--'
+
 
 function gamend 
 	_there_is_a_commit_to_amend && git commit -a --amend --no-edit $argv
