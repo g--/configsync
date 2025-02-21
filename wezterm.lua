@@ -248,6 +248,16 @@ config.keys = {
 		mods = super_key,
 		action = act.ActivateTabRelative(1)
 	},
+    {
+		key = 'LeftArrow',
+		mods = super_key .. "|SHIFT",
+		action =  act.MoveTabRelative(-1)
+	},
+    {
+		key = 'RightArrow',
+		mods = super_key .. "|SHIFT",
+		action =  act.MoveTabRelative(1)
+	},
 
 	-- control keys
 	{
