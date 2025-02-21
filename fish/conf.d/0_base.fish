@@ -43,4 +43,6 @@ if test -d $CONFIG_SYNC_ROOT/bin.$OSTYPE
 	set -gx PATH $CONFIG_SYNC_ROOT/bin.$OSTYPE $PATH
 end
 
-
+if test -d $HOME/.cargo/bin
+	set -gx PATH $HOME/.cargo/bin $PATH
+end
