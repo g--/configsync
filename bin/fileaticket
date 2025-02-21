@@ -23,5 +23,5 @@ fields:
 END_OF_QUERY
 
 else
-	echo "no known ticket thing configured
+	echo "no known ticket thing configured"
 fi
