@@ -1,0 +1,2 @@
+set -xg SPKR 'Study'
+

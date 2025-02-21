@@ -4,6 +4,38 @@
             "complex_modifications": {
                 "rules": [
                     {
+                        "description": "decrease sonos volume",
+                        "manipulators": [
+                            {
+                                "from": {
+                                    "key_code": "f13",
+                                    "modifiers": {
+                                        "mandatory": ["left_command", "left_option", "left_control"],
+                                        "optional": ["caps_lock"]
+                                    }
+                                },
+                                "to": [{ "shell_command": "sonos Study relative_volume -2" }],
+                                "type": "basic"
+                            }
+                        ]
+                    },
+                    {
+                        "description": "increase sonos volume",
+                        "manipulators": [
+                            {
+                                "from": {
+                                    "key_code": "f16",
+                                    "modifiers": {
+                                        "mandatory": ["left_command", "left_option", "left_control"],
+                                        "optional": ["caps_lock"]
+                                    }
+                                },
+                                "to": [{ "shell_command": "sonos Study relative_volume +2" }],
+                                "type": "basic"
+                            }
+                        ]
+                    },
+                    {
                         "description": "Swap \"command + tab\" with \"control + tab\" for easier use inside applications. For example: switching between tabs in your browser, which now matches the other tab related shortcuts.",
                         "manipulators": [
                             {
@@ -113,6 +145,56 @@
             },
             "devices": [
                 {
+                    "fn_function_keys": [
+                        {
+                            "from": { "key_code": "f1" },
+                            "to": [{ "key_code": "f1" }]
+                        },
+                        {
+                            "from": { "key_code": "f2" },
+                            "to": [{ "key_code": "f2" }]
+                        },
+                        {
+                            "from": { "key_code": "f3" },
+                            "to": [{ "key_code": "f3" }]
+                        },
+                        {
+                            "from": { "key_code": "f4" },
+                            "to": [{ "key_code": "f4" }]
+                        },
+                        {
+                            "from": { "key_code": "f5" },
+                            "to": [{ "key_code": "f5" }]
+                        },
+                        {
+                            "from": { "key_code": "f6" },
+                            "to": [{ "key_code": "f6" }]
+                        },
+                        {
+                            "from": { "key_code": "f7" },
+                            "to": [{ "key_code": "f7" }]
+                        },
+                        {
+                            "from": { "key_code": "f8" },
+                            "to": [{ "key_code": "f8" }]
+                        },
+                        {
+                            "from": { "key_code": "f9" },
+                            "to": [{ "key_code": "f9" }]
+                        },
+                        {
+                            "from": { "key_code": "f10" },
+                            "to": [{ "key_code": "f10" }]
+                        },
+                        {
+                            "from": { "key_code": "f11" },
+                            "to": [{ "key_code": "f11" }]
+                        },
+                        {
+                            "from": { "key_code": "f12" },
+                            "to": [{ "key_code": "f12" }]
+                        }
+                    ],
                     "identifiers": {
                         "is_keyboard": true,
                         "product_id": 18806,
@@ -120,12 +202,12 @@
                     },
                     "simple_modifications": [
                         {
-                            "from": { "key_code": "left_control" },
-                            "to": [{ "key_code": "left_command" }]
-                        },
-                        {
                             "from": { "key_code": "left_command" },
                             "to": [{ "key_code": "left_control" }]
+                        },
+                        {
+                            "from": { "key_code": "left_control" },
+                            "to": [{ "key_code": "left_command" }]
                         }
                     ]
                 }
