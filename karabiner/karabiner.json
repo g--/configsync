@@ -8,13 +8,13 @@
                         "manipulators": [
                             {
                                 "from": {
-                                    "key_code": "f13",
+                                    "key_code": "f20",
                                     "modifiers": {
                                         "mandatory": ["left_command", "left_option", "left_control"],
                                         "optional": ["caps_lock"]
                                     }
                                 },
-                                "to": [{ "shell_command": "sonos Study relative_volume -2" }],
+                                "to": [{ "shell_command": "$HOME/.pyenv/shims/sonos Study relative_volume -2" }],
                                 "type": "basic"
                             }
                         ]
@@ -24,13 +24,13 @@
                         "manipulators": [
                             {
                                 "from": {
-                                    "key_code": "f16",
+                                    "key_code": "f21",
                                     "modifiers": {
                                         "mandatory": ["left_command", "left_option", "left_control"],
                                         "optional": ["caps_lock"]
                                     }
                                 },
-                                "to": [{ "shell_command": "sonos Study relative_volume +2" }],
+                                "to": [{ "shell_command": "$HOME/.pyenv/shims/sonos Study relative_volume +2" }],
                                 "type": "basic"
                             }
                         ]
