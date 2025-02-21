@@ -16,6 +16,7 @@ install:
 	@[ -e ~/.config/nvim ] || git clone git@github.com:g--/nvim-config.git ~/.config/nvim
 	@nvim --headless "+Lazy! install" +qa
 	@go install github.com/g--/standup@upgrade
+	@pip install -U soco-cli
 
 .PHONY: install_darwin
 install_darwin: install
