@@ -14,7 +14,7 @@
                                         "optional": ["caps_lock"]
                                     }
                                 },
-                                "to": [{ "shell_command": "$HOME/.pyenv/shims/sonos Study relative_volume -2" }],
+                                "to": [{ "shell_command": "$HOME/.pyenv/shims/sonos Study relative_volume -5" }],
                                 "type": "basic"
                             }
                         ]
@@ -30,7 +30,7 @@
                                         "optional": ["caps_lock"]
                                     }
                                 },
-                                "to": [{ "shell_command": "$HOME/.pyenv/shims/sonos Study relative_volume +2" }],
+                                "to": [{ "shell_command": "$HOME/.pyenv/shims/sonos Study relative_volume +5" }],
                                 "type": "basic"
                             }
                         ]
