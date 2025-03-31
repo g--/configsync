@@ -9,7 +9,7 @@ function gmessage
 	_there_is_a_commit_to_amend && git commit --amend $argv
 end
 
-function gpush
+function force_push
 	_on_a_branch && rebase && git push --force $argv
 end
 
