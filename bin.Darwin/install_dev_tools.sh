@@ -43,5 +43,6 @@ brew install --quiet \
 	node \
 	gh \
 	google-cloud-sdk \
+	ollama \
 	telnet
 
