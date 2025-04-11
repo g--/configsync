@@ -11,9 +11,13 @@ function _window_title
 	 set branch_name (_branch_no_ticket)
 	 if [ "$branch_name" = "HEAD" ]
 		 echo -n "$repo_name: "
+	 # possible generic? $(git symbolic-ref refs/remotes/origin/HEAD | sed 's@^refs/remotes/origin/@@')
+	 else if [ "$branch_name" = "main" ]
+		 echo -n "$repo_name: "
+	 else
+		 echo -n (string shorten -m 6 $repo_name)": "
 	 end
-	 # echo -n "${ROOT##*/}: "
-     echo -n (_branch_no_ticket)
+     echo -n $branch_name
   else
      echo -n "$PWD"
  end
@@ -21,8 +25,8 @@ end
 
 function _branch_no_ticket
   set BRANCH (_branch)
-  if string match "/" "$BRANCH"
-     echo -n $BRANCH | cut -f 2 -d "/"
+  if set results (string match -r "/(.*)" "$BRANCH")
+     echo -n $results[2]
   else
      echo -n $BRANCH
  end
