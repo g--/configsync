@@ -8,7 +8,7 @@ function land
 
 		switch $confirm
 		  case Y y
-			gpush
+			git push --force
 			gh pr merge --rebase --auto
 			return 0
 		  case R r
