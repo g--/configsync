@@ -1,11 +1,34 @@
 #!/bin/bash
 
+if [ $1 == "-h" ]; then
+	cat <<EOF
+Usage:
+    tfplan2targets # runs plan then outputs a list of targets.
+    tfplan2targets tf-plan # outputs a list of targets based of a previous plan.
+
+EOF
+   exit 0
+elif [ $1 == "" ]; then
+  PLAN=$(tempfile)
+  terraform plan -out ${PLAN}
+  echo "# plan is in ${PLAN}"
+else
+  echo "# using existing plan ${PLAN}"
+  PLAN=$1
+fi
+
+jq_script=$(cat <<EOF
+  .resource_changes
+  | map(select( .change.actions | index( "no-op" ) == null))
+  | "    -target '\(.[].address)' \\\\" 
+EOF
+)
+
 
 echo "terraform apply \\"
 # not a great idea, but sometimes you have to.
-terraform plan -no-color \
-	| perl -n -e 'print "  -target \"$1\" \\\n" if m/\# ([^\[\]]+)\S* will be/ ' \
-	| sort -u
+terraform show -json ${PLAN} |
+	jq -r "${jq_script}"
 
-echo "  "
-echo "  "
+# blank line for the last backslash
+echo ""
