@@ -10,6 +10,7 @@ brew install --quiet \
 	curl  \
 	wget  \
 	ripgrep \
+	the_silver_searcher \
 	watch  \
 	git \
 	gnupg \
@@ -26,6 +27,7 @@ brew install --quiet \
 	tree-sitter \
 	pandoc \
 	kubernetes-cli \
+	kubectx \
 	helm \
 	krew \
 	pyenv \
@@ -35,6 +37,7 @@ brew install --quiet \
 	python@3.12 \
 	terraform-ls \
 	go \
+	go-jira \
 	gopls \
 	shellcheck \
 	black \
@@ -43,6 +46,14 @@ brew install --quiet \
 	node \
 	gh \
 	google-cloud-sdk \
+	karabiner-elements \
 	ollama \
+	joplin \
+	joplin-cli \
+	fish \
+	glow \
+	yamllint \
+	zstd \
+	wezterm \
 	telnet
 
