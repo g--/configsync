@@ -36,7 +36,7 @@
                         ]
                     },
                     {
-                        "description": "Swap \"command + tab\" with \"control + tab\" for easier use inside applications. For example: switching between tabs in your browser, which now matches the other tab related shortcuts.",
+                        "description": "Swap \"command + space\" with \"control + space\" to find applications",
                         "manipulators": [
                             {
                                 "conditions": [
@@ -105,7 +105,10 @@
                                 ],
                                 "from": {
                                     "key_code": "tab",
-                                    "modifiers": { "mandatory": ["command"] }
+                                    "modifiers": {
+                                        "mandatory": ["command"],
+                                        "optional": ["any"]
+                                    }
                                 },
                                 "to": [
                                     {
@@ -129,7 +132,10 @@
                                 ],
                                 "from": {
                                     "key_code": "tab",
-                                    "modifiers": { "mandatory": ["option"] }
+                                    "modifiers": {
+                                        "mandatory": ["option"],
+                                        "optional": ["any"]
+                                    }
                                 },
                                 "to": [
                                     {
@@ -208,6 +214,15 @@
                         {
                             "from": { "key_code": "left_control" },
                             "to": [{ "key_code": "left_command" }]
+                        }
+                    ]
+                },
+                {
+                    "identifiers": { "is_keyboard": true },
+                    "simple_modifications": [
+                        {
+                            "from": { "key_code": "caps_lock" },
+                            "to": [{ "key_code": "vk_none" }]
                         }
                     ]
                 }

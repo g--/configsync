@@ -42,3 +42,7 @@ GitOps
 Standup
 L7
 ConfigMaps
+jinja2
+Ansible
+SREs
+runbooks
