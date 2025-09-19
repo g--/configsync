@@ -37,7 +37,7 @@ echo "$COMMITS" >> ${PR_DESCRIPTION_TEMP}
 LINES=`wc -l "${PR_DESCRIPTION_TEMP}" | cut -w -f 2`
 
 TEMPLATE=`git rev-parse --show-toplevel`/.github/pull_request_template.md
-if [[ -e "${TEMPLATE}" ]]; then
+if [[ -e "${TEMPLATE}" ]] && [[ -z "${GHPR_NO_EDIT}" ]] ; then
 
   echo "------------------------" >> ${PR_DESCRIPTION_TEMP}
   cat "${TEMPLATE}" >> ${PR_DESCRIPTION_TEMP}
@@ -45,7 +45,9 @@ fi
 
 let LINES+=1;
 
-"${EDITOR}" +"${LINES}" "${PR_DESCRIPTION_TEMP}"
+if [[ -z "${GHPR_NO_EDIT}" ]]; then
+   "${EDITOR}" +":normal! ${LINES}Gv0G\$" "${PR_DESCRIPTION_TEMP}"
+fi
 
 # GH_REPO=`gh repo view --json owner,name -t "{{.owner.login}}/{{.name}}"`
 gh pr create \
