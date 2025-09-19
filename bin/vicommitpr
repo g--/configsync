@@ -1,0 +1,4 @@
+#!/bin/bash -e
+
+"${EDITOR}" "$@"
+GHPR_NO_EDIT=1 commitpr "$@"
