@@ -1,0 +1,24 @@
+#!/bin/bash
+
+if [[ "$(uname -s)" == "Darwin" ]]; then
+    # Use grealpath if available, otherwise fallback to realpath
+    if command -v grealpath > /dev/null; then
+        REALPATH="grealpath"
+    else
+        echo "Warning: grealpath not found, using realpath (might not support all options)"
+        REALPATH="realpath"
+    fi
+else
+    # Use realpath for non-macOS systems
+    REALPATH="realpath"
+fi
+
+function gh_repo_path_url {
+  local repo_root repo_subpath repo_url
+  repo_root=$(git rev-parse --show-toplevel) || return 1
+  repo_subpath=$($REALPATH --relative-to="$repo_root" "$PWD")
+  repo_url=$(gh repo view --json url -q .url)
+  echo "$repo_url/tree/main/$repo_subpath"
+}
+
+gh_repo_path_url
