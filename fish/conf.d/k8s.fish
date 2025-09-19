@@ -2,7 +2,7 @@ function k
 	command kubectl $argv
 end
 function kshell
-	command kubectl run -i --tty --rm geoffo-debug --image=nicolaka/netshoot --restart=Never -- sh $argv
+	command kubectl run -i --tty --rm geoffo-debug --image=nicolaka/netshoot --restart=Never --annotations='cluster-autoscaler.kubernetes.io/safe-to-evict="true"' -- sh $argv
 end
 function ky
 	command kubectl get -o yaml $argv
