@@ -12,7 +12,7 @@ BASE=`git merge-base $MAIN HEAD`
 #
 # idea for multi-commit PRs: try [%s](https://github.com/$GITHUB_ORG/$REPO/commit/%H)%n%n%b%n%n%n'
 COMMITS=`git log --format='### %s%n%n%b%n%n%n' --decorate=no $BASE..HEAD`
-COMMITS_SUMMARY=`git log --format='%s' --decorate=no $BASE..HEAD`
+COMMITS_SUMMARY=`git log --reverse --format='%s' --decorate=no $BASE..HEAD`
 TITLE=`echo "${COMMITS_SUMMARY}" | head -1`
 
 # reflow paragraphs so they don't have newlines, because gh won't ignore them
