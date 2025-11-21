@@ -174,13 +174,13 @@ config.mouse_bindings = {
 	},
 }
 
-config.keys = {
-	-- copy pasta
+config.keys = {-- copy pasta
 	{
 		key = 'c',
 		mods = super_key,
-		action = wezterm.action.CopyTo 'ClipboardAndPrimarySelection'
+		action = wezterm.action.CopyTo 'ClipboardAndPrimarySelection',
 	},
+	{key="Enter", mods="SHIFT", action=wezterm.action{SendString="\x1b\r"}},
 	{
 		key = 'v',
 		mods = super_key,
