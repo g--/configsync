@@ -1,0 +1,43 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+git_root=$(git rev-parse --show-toplevel)
+
+conflicted_files=()
+while IFS= read -r -d $'\0' file; do
+  conflicted_files+=("$file")
+done < <(git diff --name-only --diff-filter=U -z)
+
+if [[ ${#conflicted_files[@]} -eq 0 ]]; then
+  echo "No conflicted files detected."
+  exit 0
+fi
+
+conflicted_files_abs=()
+for f in "${conflicted_files[@]}"; do
+  conflicted_files_abs+=("$git_root/$f")
+done
+
+
+"$EDITOR" +'/^\(<<<<<<<\|=======\|>>>>>>>\)/' "${conflicted_files_abs[@]}"
+
+for file in "${conflicted_files_abs[@]}"; do
+  # Check if conflict markers remain
+  if ! grep -q '<<<<<<< ' "$file"; then
+    git add "$file"
+    echo "Resolved: $file (added to staging)"
+  else
+    echo "Conflict markers remain in $file. Breaking for human resolution."
+	exit 1
+  fi
+done
+
+# Detect if in rebase or cherry-pick
+if [ -f .git/CHERRY_PICK_HEAD ]; then
+  echo "Run: git cherry-pick --continue"
+elif [ -d .git/rebase-apply ] || [ -d .git/rebase-merge ]; then
+  echo "Run: git rebase --continue"
+else
+  echo "Conflicts resolved. If this was a merge, run: git commit"
+fi
