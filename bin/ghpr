@@ -15,6 +15,48 @@ COMMITS=`git log --format='### %s%n%n%b%n%n%n' --decorate=no $BASE..HEAD`
 COMMITS_SUMMARY=`git log --reverse --format='%s' --decorate=no $BASE..HEAD`
 TITLE=`echo "${COMMITS_SUMMARY}" | head -1`
 
+# Extract commit type for labeling
+COMMIT_TYPE=""
+LABEL=""
+if [[ "$TITLE" =~ ^([^:]+): ]]; then
+    COMMIT_TYPE="${BASH_REMATCH[1]}"
+    case "$COMMIT_TYPE" in
+        "feat")
+            LABEL="enhancement"
+            ;;
+        "fix")
+            LABEL="bug"
+            ;;
+        "docs")
+            LABEL="documentation"
+            ;;
+        "refactor")
+            LABEL="refactoring"
+            ;;
+        "test")
+            LABEL="testing"
+            ;;
+        "style")
+            LABEL="style"
+            ;;
+        "perf")
+            LABEL="performance"
+            ;;
+        "build")
+            LABEL="build"
+            ;;
+        "ci")
+            LABEL="ci"
+            ;;
+        "chore")
+            LABEL="chore"
+            ;;
+        *)
+            LABEL="$COMMIT_TYPE"
+            ;;
+    esac
+fi
+
 # reflow paragraphs so they don't have newlines, because gh won't ignore them
 COMMITS=`echo "$COMMITS" | pandoc -f markdown -t gfm --wrap none --lua-filter ${CONFIG_SYNC_ROOT}/lib/pandoc_output_backticks_always.lua -`
 
@@ -50,9 +92,16 @@ if [[ -z "${GHPR_NO_EDIT}" ]]; then
 fi
 
 # GH_REPO=`gh repo view --json owner,name -t "{{.owner.login}}/{{.name}}"`
+# Build label argument if we have a label
+LABEL_ARG=""
+if [[ -n "$LABEL" ]]; then
+    LABEL_ARG="--label $LABEL"
+fi
+
 gh pr create \
 	--title "${TITLE}" \
 	--body-file "${PR_DESCRIPTION_TEMP}" \
+	$LABEL_ARG \
 	"$@"
 
 
