@@ -57,6 +57,153 @@ if [[ "$TITLE" =~ ^([^:]+): ]]; then
     esac
 fi
 
+# Detect technologies from changed files
+CHANGED_FILES=`git diff --name-only $BASE..HEAD`
+TECH_LABELS=""
+
+if [[ -n "$CHANGED_FILES" ]]; then
+    # Initialize counters using simple variables
+    terraform_count=0
+    helm_count=0
+    docker_count=0
+    docker_compose_count=0
+    kubernetes_count=0
+    golang_count=0
+    python_count=0
+    javascript_count=0
+    jvm_count=0
+    rust_count=0
+    ruby_count=0
+    php_count=0
+    cpp_count=0
+    csharp_count=0
+    swift_count=0
+    sql_count=0
+    shell_count=0
+    build_count=0
+    yaml_count=0
+
+    # Process each changed file
+    while IFS= read -r file; do
+        # Skip empty lines
+        [[ -z "$file" ]] && continue
+
+        # Technology detection logic
+        case "$file" in
+            # Terraform
+            *.tf|*.tfvars|terraform.*)
+                terraform_count=$((terraform_count + 1))
+                ;;
+            # Helm
+            Chart.yaml|values.yaml|*/Chart.yaml|*/values.yaml)
+                helm_count=$((helm_count + 1))
+                ;;
+            templates/*.yaml|templates/*.yml|*/templates/*.yaml|*/templates/*.yml)
+                helm_count=$((helm_count + 1))
+                ;;
+            # Docker
+            Dockerfile*|.dockerignore|*/Dockerfile*|*/.dockerignore)
+                docker_count=$((docker_count + 1))
+                ;;
+            docker-compose*.yml|docker-compose*.yaml|*/docker-compose*.yml|*/docker-compose*.yaml)
+                docker_compose_count=$((docker_compose_count + 1))
+                ;;
+            # Golang
+            *.go|go.mod|go.sum|*/go.mod|*/go.sum)
+                golang_count=$((golang_count + 1))
+                ;;
+            # Python
+            *.py|requirements.txt|pyproject.toml|setup.py|*/requirements.txt|*/pyproject.toml|*/setup.py)
+                python_count=$((python_count + 1))
+                ;;
+            # JavaScript/TypeScript
+            *.js|*.ts|*.jsx|*.tsx|package.json|tsconfig.json|*/package.json|*/tsconfig.json)
+                javascript_count=$((javascript_count + 1))
+                ;;
+            # Other languages
+            *.java|*.kt|*.scala)
+                jvm_count=$((jvm_count + 1))
+                ;;
+            *.rs|Cargo.toml|*/Cargo.toml)
+                rust_count=$((rust_count + 1))
+                ;;
+            *.rb|Gemfile|*/Gemfile)
+                ruby_count=$((ruby_count + 1))
+                ;;
+            *.php)
+                php_count=$((php_count + 1))
+                ;;
+            *.c|*.cpp|*.h|*.hpp)
+                cpp_count=$((cpp_count + 1))
+                ;;
+            *.cs)
+                csharp_count=$((csharp_count + 1))
+                ;;
+            *.swift)
+                swift_count=$((swift_count + 1))
+                ;;
+            *.sql)
+                sql_count=$((sql_count + 1))
+                ;;
+            *.sh|*.bash)
+                shell_count=$((shell_count + 1))
+                ;;
+            Makefile|*.mk)
+                build_count=$((build_count + 1))
+                ;;
+            # YAML files (check for k8s)
+            *.yaml|*.yml)
+                # Check if it's a Kubernetes file by looking for common k8s fields
+                if grep -q "apiVersion\|kind:" "$file" 2>/dev/null; then
+                    kubernetes_count=$((kubernetes_count + 1))
+                else
+                    yaml_count=$((yaml_count + 1))
+                fi
+                ;;
+        esac
+    done <<< "$CHANGED_FILES"
+
+    # Build infrastructure labels
+    INFRA_LABELS=""
+    [[ $terraform_count -gt 0 ]] && INFRA_LABELS="$INFRA_LABELS terraform"
+    [[ $helm_count -gt 0 ]] && INFRA_LABELS="$INFRA_LABELS helm"
+    [[ $docker_count -gt 0 ]] && INFRA_LABELS="$INFRA_LABELS docker"
+    [[ $docker_compose_count -gt 0 ]] && INFRA_LABELS="$INFRA_LABELS docker-compose"
+    [[ $kubernetes_count -gt 0 ]] && INFRA_LABELS="$INFRA_LABELS kubernetes"
+    INFRA_LABELS="${INFRA_LABELS# }" # trim leading space
+
+    # Find dominant language
+    DOMINANT_LANG=""
+    MAX_LANG_COUNT=0
+
+    # Check each language count (skip generic ones unless overwhelming)
+    [[ $golang_count -gt $MAX_LANG_COUNT ]] && [[ $golang_count -gt 1 ]] && MAX_LANG_COUNT=$golang_count && DOMINANT_LANG="golang"
+    [[ $python_count -gt $MAX_LANG_COUNT ]] && [[ $python_count -gt 1 ]] && MAX_LANG_COUNT=$python_count && DOMINANT_LANG="python"
+    [[ $javascript_count -gt $MAX_LANG_COUNT ]] && [[ $javascript_count -gt 1 ]] && MAX_LANG_COUNT=$javascript_count && DOMINANT_LANG="javascript"
+    [[ $jvm_count -gt $MAX_LANG_COUNT ]] && [[ $jvm_count -gt 1 ]] && MAX_LANG_COUNT=$jvm_count && DOMINANT_LANG="jvm"
+    [[ $rust_count -gt $MAX_LANG_COUNT ]] && [[ $rust_count -gt 1 ]] && MAX_LANG_COUNT=$rust_count && DOMINANT_LANG="rust"
+    [[ $ruby_count -gt $MAX_LANG_COUNT ]] && [[ $ruby_count -gt 1 ]] && MAX_LANG_COUNT=$ruby_count && DOMINANT_LANG="ruby"
+    [[ $php_count -gt $MAX_LANG_COUNT ]] && [[ $php_count -gt 1 ]] && MAX_LANG_COUNT=$php_count && DOMINANT_LANG="php"
+    [[ $cpp_count -gt $MAX_LANG_COUNT ]] && [[ $cpp_count -gt 1 ]] && MAX_LANG_COUNT=$cpp_count && DOMINANT_LANG="cpp"
+    [[ $csharp_count -gt $MAX_LANG_COUNT ]] && [[ $csharp_count -gt 1 ]] && MAX_LANG_COUNT=$csharp_count && DOMINANT_LANG="csharp"
+    [[ $swift_count -gt $MAX_LANG_COUNT ]] && [[ $swift_count -gt 1 ]] && MAX_LANG_COUNT=$swift_count && DOMINANT_LANG="swift"
+    [[ $sql_count -gt $MAX_LANG_COUNT ]] && [[ $sql_count -gt 1 ]] && MAX_LANG_COUNT=$sql_count && DOMINANT_LANG="sql"
+    # Generic labels only if overwhelming (6+ files)
+    [[ $shell_count -gt $MAX_LANG_COUNT ]] && [[ $shell_count -gt 5 ]] && MAX_LANG_COUNT=$shell_count && DOMINANT_LANG="shell"
+    [[ $build_count -gt $MAX_LANG_COUNT ]] && [[ $build_count -gt 5 ]] && MAX_LANG_COUNT=$build_count && DOMINANT_LANG="build"
+    [[ $yaml_count -gt $MAX_LANG_COUNT ]] && [[ $yaml_count -gt 5 ]] && MAX_LANG_COUNT=$yaml_count && DOMINANT_LANG="yaml"
+
+    # Build final tech labels: infrastructure tools + dominant language
+    TECH_LABELS="$INFRA_LABELS"
+    if [[ -n "$DOMINANT_LANG" ]]; then
+        if [[ -n "$TECH_LABELS" ]]; then
+            TECH_LABELS="$TECH_LABELS $DOMINANT_LANG"
+        else
+            TECH_LABELS="$DOMINANT_LANG"
+        fi
+    fi
+fi
+
 # reflow paragraphs so they don't have newlines, because gh won't ignore them
 COMMITS=`echo "$COMMITS" | pandoc -f markdown -t gfm --wrap none --lua-filter ${CONFIG_SYNC_ROOT}/lib/pandoc_output_backticks_always.lua -`
 
@@ -92,10 +239,73 @@ if [[ -z "${GHPR_NO_EDIT}" ]]; then
 fi
 
 # GH_REPO=`gh repo view --json owner,name -t "{{.owner.login}}/{{.name}}"`
-# Build label argument if we have a label
+# Build label arguments for commit type and technology labels
 LABEL_ARG=""
+ALL_LABELS=""
+
+# Add commit type label
 if [[ -n "$LABEL" ]]; then
-    LABEL_ARG="--label $LABEL"
+    ALL_LABELS="$LABEL"
+fi
+
+# Add technology labels
+if [[ -n "$TECH_LABELS" ]]; then
+    if [[ -n "$ALL_LABELS" ]]; then
+        ALL_LABELS="$ALL_LABELS $TECH_LABELS"
+    else
+        ALL_LABELS="$TECH_LABELS"
+    fi
+fi
+
+# Build the --label arguments with validation
+if [[ -n "$ALL_LABELS" ]]; then
+    echo "Auto-detected labels: $ALL_LABELS"
+
+    # Get existing labels from the repository
+    EXISTING_LABELS=""
+    if command -v gh >/dev/null 2>&1; then
+        EXISTING_LABELS=$(gh api repos/:owner/:repo/labels --jq '.[].name' 2>/dev/null | tr '\n' ' ')
+    fi
+
+    if [[ -n "$EXISTING_LABELS" ]]; then
+        echo "Checking label availability in repository..."
+        VALID_LABELS=""
+        SKIPPED_LABELS=""
+
+        for label in $ALL_LABELS; do
+            if echo "$EXISTING_LABELS" | grep -q "\b$label\b"; then
+                if [[ -z "$VALID_LABELS" ]]; then
+                    VALID_LABELS="$label"
+                else
+                    VALID_LABELS="$VALID_LABELS $label"
+                fi
+            else
+                if [[ -z "$SKIPPED_LABELS" ]]; then
+                    SKIPPED_LABELS="$label"
+                else
+                    SKIPPED_LABELS="$SKIPPED_LABELS $label"
+                fi
+            fi
+        done
+
+        # Build label arguments only for valid labels
+        if [[ -n "$VALID_LABELS" ]]; then
+            for label in $VALID_LABELS; do
+                LABEL_ARG="$LABEL_ARG --label $label"
+            done
+            echo "Using labels: $VALID_LABELS"
+        fi
+
+        if [[ -n "$SKIPPED_LABELS" ]]; then
+            echo "Skipping non-existent labels: $SKIPPED_LABELS"
+        fi
+    else
+        # Fallback: use all labels if we can't check (offline or API issues)
+        echo "Unable to verify labels, using all detected labels..."
+        for label in $ALL_LABELS; do
+            LABEL_ARG="$LABEL_ARG --label $label"
+        done
+    fi
 fi
 
 gh pr create \
