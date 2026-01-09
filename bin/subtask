@@ -1,0 +1,43 @@
+#!/bin/bash
+
+PARENT_TICKET=""
+
+while getopts "p:" opt; do
+	case $opt in
+		p) PARENT_TICKET="$OPTARG" ;;
+	esac
+done
+shift $((OPTIND-1))
+
+# If parent not specified, try to auto-detect
+if [ -z "$PARENT_TICKET" ]; then
+	PARENT_TICKET=$(_ticket)
+fi
+
+if [ -z "$PARENT_TICKET" ]; then
+	echo "Error: No parent ticket found. Use -p <ticket> to specify."
+	exit 1
+fi
+
+TMPFILE=$(mktemp)
+cat > "$TMPFILE" << EOF
+fields:
+  project:
+    key: ${JIRA_PROJECT}
+  issuetype:
+    name: Sub-task
+  parent:
+    key: ${PARENT_TICKET}
+  summary: $1
+  priority:
+    name: Medium
+  assignee:
+    emailAddress: ${USER}@${ORG_DOMAIN}
+EOF
+
+#echo "DEBUG: Generated YAML:"
+#cat "$TMPFILE"
+#echo ""
+
+jira create --file "$TMPFILE"
+rm "$TMPFILE" 
