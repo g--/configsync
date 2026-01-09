@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+if [ -n "$PREFERRED_LLM_CLI" ] && command -v "$PREFERRED_LLM_CLI" &> /dev/null; then
+  exec "$PREFERRED_LLM_CLI" "$@"
+else
+  exec orchat "$@"
+fi
