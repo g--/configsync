@@ -1,27 +1,7 @@
 #!/bin/bash
 
 if [ "${JIRA_PROJECT}" != "" ]; then
-	exec jira create
-# for later?
-read -r -d '' QUERY << END_OF_QUERY
-fields:
-  project:
-    key: SCORE
-  issuetype:
-    name: Story
-  summary: >-
-  	$1
-    
-  priority: # Values: Critical , High, Medium, Low, Informational, None, 
-    name: 
-  description: |~
-    
-  assignee:
-    emailAddress: 
-  reporter:
-    emailAddress: ${USER}@${ORG_DOMAIN}
-END_OF_QUERY
-
+	exec jira create -p "${JIRA_PROJECT}" -s "${1}" --issuetype Story --override=priority=Medium
 else
 	echo "no known ticket thing configured"
 fi
