@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+exec ollama run llama3.2:latest "$@"
