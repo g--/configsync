@@ -8,7 +8,6 @@ local wezterm = require 'wezterm'
 -- https://wezfurlong.org/wezterm/config/lua/config/index.html
 local config = {}
 
-
 config.scrollback_lines = 100000
 
 -- In newer versions of wezterm, use the config_builder which will
@@ -38,8 +37,51 @@ config.show_update_window = false
 config.check_for_updates = false
 
 config.audible_bell = 'Disabled'
+config.visual_bell = {
+  fade_in_duration_ms = 75,
+  fade_out_duration_ms = 75,
+  target = 'CursorColor',
+}
 
 config.adjust_window_size_when_changing_font_size = false
+
+-- Track which tabs have unread bells
+local bell_tabs = {}
+
+wezterm.on('bell', function(window, pane)
+  local tab = pane:tab()
+  local tab_id = tab:tab_id()
+
+  -- Mark this tab as having an unread bell
+  bell_tabs[tab_id] = true
+
+  -- If WezTerm isn't focused, also play an audible bell
+  local focused = window:is_focused()
+  wezterm.log_info('bell event: focused=' .. tostring(focused))
+  if not focused then
+    wezterm.run_child_process({'afplay', '/System/Library/Sounds/Tink.aiff'})
+  end
+end)
+
+wezterm.on('format-tab-title', function(tab, tabs, panes, config, hover, max_width)
+  local tab_id = tab.tab_id
+
+  -- Clear the bell indicator if this tab is active
+  if tab.is_active then
+    bell_tabs[tab_id] = nil
+  end
+
+  local title = tab.active_pane.title
+  if #title > max_width - 3 then
+    title = title:sub(1, max_width - 3) .. '…'
+  end
+
+  if bell_tabs[tab_id] then
+    return ' 🔔 ' .. title
+  end
+
+  return ' ' .. title
+end)
 
 local act = wezterm.action
 
