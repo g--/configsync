@@ -34,7 +34,7 @@ end
 
 function _branch
   if git rev-parse --git-dir &> /dev/null
-     echo -n (git rev-parse --abbrev-ref HEAD)
+     echo -n (git rev-parse --abbrev-ref HEAD 2>/dev/null)
   else
      echo -n ""
   end
