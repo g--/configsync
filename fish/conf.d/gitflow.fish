@@ -98,6 +98,108 @@ function _main
   command git rev-parse --abbrev-ref origin/HEAD
 end
 
+set -gx REPO_CLONES ~/d
+set -gx WORKTREE_DIR ~/w
+
+# Shared helpers for worktree commands
+
+function _wt_repo_name -d "Extract repo name from SSH URL"
+  string replace -r '.*/' '' -- $argv[1] | string replace -r '\.git$' ''
+end
+
+function _wt_ensure_clone -d "Clone or fetch a repo, prints clone_dir"
+  set -l repo_url $argv[1]
+  set -l repo_name (_wt_repo_name $repo_url)
+  set -l clone_dir $REPO_CLONES/$repo_name
+
+  if not test -d $clone_dir
+    echo "Cloning $repo_url into $clone_dir..." >&2
+    if not git clone $repo_url $clone_dir
+      echo "Error: git clone failed" >&2
+      return 1
+    end
+  else
+    echo "Fetching in $clone_dir..." >&2
+    if not git -C $clone_dir fetch
+      echo "Error: git fetch failed" >&2
+      return 1
+    end
+  end
+
+  echo $clone_dir
+end
+
+function _wt_path -d "Compute worktree path from repo name and branch"
+  set -l repo_name $argv[1]
+  set -l branchname $argv[2]
+
+  set -l parts (string split '/' -- $branchname)
+  set -l worktree_name
+  if test (count $parts) -ge 2
+    set worktree_name $parts[1]__{$repo_name}__(string join '_' -- $parts[2..])
+  else
+    set worktree_name {$branchname}__{$repo_name}
+  end
+
+  echo $WORKTREE_DIR/$worktree_name
+end
+
+function nw -d "Clone (or fetch) a repo and create a worktree with a new branch"
+  if test (count $argv) -lt 2
+    echo "usage: nw <repo> <ticket_id/branch_suffix>"
+    return 1
+  end
+
+  set -l repo_url $argv[1]
+  set -l branchname $argv[2]
+  set -l repo_name (_wt_repo_name $repo_url)
+  set -l clone_dir (_wt_ensure_clone $repo_url) || return 1
+  set -l worktree_path (_wt_path $repo_name $branchname)
+  set -l main_branch (git -C $clone_dir rev-parse --abbrev-ref origin/HEAD)
+
+  if not git -C $clone_dir worktree add -b $branchname $worktree_path $main_branch
+    echo "Error: git worktree add failed"
+    return 1
+  end
+
+  if not git -C $worktree_path push --set-upstream origin $branchname
+    echo "Error: git push --set-upstream failed"
+    return 1
+  end
+
+  echo "Worktree ready at $worktree_path"
+  cd $worktree_path
+end
+
+function cw -d "Check out an existing remote branch into a worktree"
+  if test (count $argv) -lt 2
+    echo "usage: cw <repo> <branch>"
+    return 1
+  end
+
+  set -l repo_url $argv[1]
+  set -l branchname $argv[2]
+  set -l repo_name (_wt_repo_name $repo_url)
+  set -l clone_dir (_wt_ensure_clone $repo_url) || return 1
+  set -l worktree_path (_wt_path $repo_name $branchname)
+
+  # Use existing local branch if it exists, otherwise create tracking branch
+  if git -C $clone_dir show-ref --verify --quiet refs/heads/$branchname
+    if not git -C $clone_dir worktree add $worktree_path $branchname
+      echo "Error: git worktree add failed"
+      return 1
+    end
+  else
+    if not git -C $clone_dir worktree add --track -b $branchname $worktree_path origin/$branchname
+      echo "Error: git worktree add failed"
+      return 1
+    end
+  end
+
+  echo "Worktree ready at $worktree_path"
+  cd $worktree_path
+end
+
 if set -q JIRA_BASE
 	complete -c nb -a "(_choose_jira_ticket)" -f
 
@@ -105,9 +207,29 @@ if set -q JIRA_BASE
 		set ticket (jira now_as_branch_name | fzf --preview-label 'Ticket details' --preview 'jira view (echo {} | string split /)[1]' | string split / )
 		echo "$ticket[1]/"
 	end
+
+	# nw: arg 2 is branch name via jira ticket picker (same as nb)
+	complete -c nw -n "test (count (commandline -opc)) -eq 2" -a "(_choose_jira_ticket)" -f
 end
+
+# cw: arg 2 is an existing remote branch, picked via fzf
+function _choose_remote_branch
+	set -l tokens (commandline -opc)
+	set -l repo_url $tokens[2]
+	set -l repo_name (_wt_repo_name $repo_url)
+	set -l clone_dir $REPO_CLONES/$repo_name
+	if not test -d $clone_dir
+		return
+	end
+	git -C $clone_dir branch -r --format '%(refname:short)' | string replace 'origin/' '' | grep -v HEAD | fzf
+end
+complete -c cw -n "test (count (commandline -opc)) -eq 2" -a "(_choose_remote_branch)" -f
 
 if set -q GITHUB_ORG
 	complete -c git -n "__fish_seen_subcommand_from clone" -a "(repo_list_for_org | fzf)" -f
+
+	# nw/cw: arg 1 is repo via org repo list (same as git clone)
+	complete -c nw -n "test (count (commandline -opc)) -eq 1" -a "(repo_list_for_org | fzf)" -f
+	complete -c cw -n "test (count (commandline -opc)) -eq 1" -a "(repo_list_for_org | fzf)" -f
 end
 
