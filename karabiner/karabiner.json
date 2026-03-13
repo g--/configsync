@@ -136,6 +136,96 @@
                         ]
                     },
                     {
+                        "description": "Hyper+T: Switch to WezTerm",
+                        "manipulators": [
+                            {
+                                "from": {
+                                    "key_code": "t",
+                                    "modifiers": {
+                                        "mandatory": ["command", "option", "control", "shift"]
+                                    }
+                                },
+                                "to": [{ "shell_command": "open -a WezTerm" }],
+                                "type": "basic"
+                            }
+                        ]
+                    },
+                    {
+                        "description": "Hyper+N: Switch to Logseq",
+                        "manipulators": [
+                            {
+                                "from": {
+                                    "key_code": "n",
+                                    "modifiers": {
+                                        "mandatory": ["command", "option", "control", "shift"]
+                                    }
+                                },
+                                "to": [{ "shell_command": "open -a Logseq" }],
+                                "type": "basic"
+                            }
+                        ]
+                    },
+                    {
+                        "description": "Hyper+I: Switch to Slack",
+                        "manipulators": [
+                            {
+                                "from": {
+                                    "key_code": "i",
+                                    "modifiers": {
+                                        "mandatory": ["command", "option", "control", "shift"]
+                                    }
+                                },
+                                "to": [{ "shell_command": "open -a Slack" }],
+                                "type": "basic"
+                            }
+                        ]
+                    },
+                    {
+                        "description": "Hyper+M: Switch to Outlook Mail",
+                        "manipulators": [
+                            {
+                                "from": {
+                                    "key_code": "m",
+                                    "modifiers": {
+                                        "mandatory": ["command", "option", "control", "shift"]
+                                    }
+                                },
+                                "to": [{ "shell_command": "osascript -e 'tell application \"Microsoft Outlook\" to activate' -e 'tell application \"System Events\" to keystroke \"1\" using command down'" }],
+                                "type": "basic"
+                            }
+                        ]
+                    },
+                    {
+                        "description": "Hyper+C: Switch to Outlook Calendar",
+                        "manipulators": [
+                            {
+                                "from": {
+                                    "key_code": "c",
+                                    "modifiers": {
+                                        "mandatory": ["command", "option", "control", "shift"]
+                                    }
+                                },
+                                "to": [{ "shell_command": "osascript -e 'tell application \"Microsoft Outlook\" to activate' -e 'tell application \"System Events\" to keystroke \"2\" using command down'" }],
+                                "type": "basic"
+                            }
+                        ]
+                    },
+                    {
+                        "description": "Hyper+B: Switch to Chrome",
+                        "manipulators": [
+                            {
+                                "from": {
+                                    "key_code": "b",
+                                    "modifiers": {
+                                        "mandatory": ["command", "option", "control", "shift"]
+                                    }
+                                },
+                                "to": [{ "shell_command": "open -a 'Google Chrome'" }],
+                                "type": "basic"
+                            }
+                        ]
+                    },
+                    {
                         "description": "Swap \"command + tab\" with \"option + tab\" for easier use inside applications.",
                         "manipulators": [
                             {
