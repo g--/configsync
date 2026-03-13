@@ -21,7 +21,7 @@ end
 
 function gdiff
   set BASE (git merge-base (_main) HEAD)
-  git diff $BASE..HEAD
+  git diff $argv $BASE..HEAD
 end
 
 function ghg 
