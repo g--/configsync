@@ -71,7 +71,27 @@ wezterm.on('format-tab-title', function(tab, tabs, panes, config, hover, max_wid
     bell_tabs[tab_id] = nil
   end
 
-  local title = tab.active_pane.title
+  local pane_title = tab.active_pane.title
+  local title = pane_title
+
+  -- If the pane title starts with a non-ASCII character (e.g. a Claude Code
+  -- spinner icon like ⠋ or ●), keep the icon but replace the rest of the
+  -- title with the last fish-set title cached in a user var.
+  local first_byte = pane_title:byte(1)
+  if first_byte and first_byte > 127 then
+    local char_len = 1
+    if first_byte >= 0xF0 then char_len = 4
+    elseif first_byte >= 0xE0 then char_len = 3
+    elseif first_byte >= 0xC0 then char_len = 2
+    end
+    local icon = pane_title:sub(1, char_len)
+
+    local fish_title = tab.active_pane.user_vars.fish_title
+    if fish_title and fish_title ~= '' then
+      title = icon .. ' ' .. fish_title
+    end
+  end
+
   if #title > max_width - 3 then
     title = title:sub(1, max_width - 3) .. '…'
   end
