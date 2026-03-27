@@ -1,6 +1,9 @@
 function fish_title
   set title (_window_title)
   echo -ne "\x1b]1;$title\x1b\\";
+  # Stash title as a WezTerm user var so format-tab-title can use it
+  # even when another process (e.g. Claude Code) overwrites the pane title
+  printf "\033]1337;SetUserVar=%s=%s\007" fish_title (printf '%s' "$title" | base64)
 
 end
 
@@ -8,18 +11,18 @@ function _window_title
   if git rev-parse --git-dir &> /dev/null
      set ROOT (git rev-parse --show-toplevel)
 	 set repo_name (path basename $ROOT)
-	 set branch_name (_branch_no_ticket)
-	 if [ "$branch_name" = "HEAD" ]
-		 echo -n "$repo_name: "
-	 # possible generic? $(git symbolic-ref refs/remotes/origin/HEAD | sed 's@^refs/remotes/origin/@@')
-	 else if [ "$branch_name" = "main" ]
-		 echo -n "$repo_name: "
+	 set BRANCH (_branch)
+	 set branch_suffix (_branch_no_ticket)
+	 set ticket (string match -r "^([^/]+)/" "$BRANCH")[2]
+	 if [ "$branch_suffix" = "HEAD" -o "$branch_suffix" = "main" ]
+		 echo -n "$repo_name: $branch_suffix"
+	 else if test -n "$ticket"
+		 echo -n "$branch_suffix ($ticket, $repo_name)"
 	 else
-		 echo -n (string shorten -m 6 $repo_name)": "
+		 echo -n "$branch_suffix ($repo_name)"
 	 end
-     echo -n $branch_name
   else
-     echo -n "$PWD"
+     echo -n (path basename $PWD)" ($PWD)"
  end
 end 
 
