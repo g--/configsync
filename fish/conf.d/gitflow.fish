@@ -200,6 +200,45 @@ function cw -d "Check out an existing remote branch into a worktree"
   cd $worktree_path
 end
 
+function cr -d "Check out a GitHub PR into a worktree"
+  if test (count $argv) -eq 0
+    echo "usage: cr <pr-url>"
+    return 1
+  end
+
+  set -l pr_url $argv[1]
+
+  # Extract owner/repo/number from URL like https://github.com/org/repo/pull/123
+  set -l match (string match -r 'github\.com/([^/]+)/([^/]+)/pull/(\d+)' -- $pr_url)
+  if test -z "$match"
+    echo "Error: could not parse PR URL '$pr_url'"
+    return 1
+  end
+
+  set -l owner $match[2]
+  set -l repo $match[3]
+  set -l pr_number $match[4]
+
+  set -l pr_json (gh pr view $pr_number --repo $owner/$repo --json headRefName,headRepositoryOwner,headRepository 2>&1)
+  if test $status -ne 0
+    echo "Error: could not fetch PR details"
+    echo $pr_json
+    return 1
+  end
+
+  set -l branch (echo $pr_json | jq -r '.headRefName')
+  set -l head_owner (echo $pr_json | jq -r '.headRepositoryOwner.login')
+  set -l head_repo (echo $pr_json | jq -r '.headRepository.name')
+
+  if test -z "$branch" -o "$branch" = null -o -z "$head_owner" -o "$head_owner" = null
+    echo "Error: could not parse PR details"
+    return 1
+  end
+
+  set -l repo_url "git@github.com:$head_owner/$head_repo.git"
+  cw $repo_url $branch
+end
+
 if set -q JIRA_BASE
 	complete -c nb -a "(_choose_jira_ticket)" -f
 
