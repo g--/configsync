@@ -1,0 +1,4 @@
+{{- range .issues }}
+{{ if eq .fields.status.name "Done" }}✅{{ else if eq .fields.status.name "Pull Request" }}🔀{{ else if eq .fields.status.name "In Progress" }}☞{{ end }} {{ .key }}: {{ .fields.summary }}
+{{ if .fields.description }}   {{ .fields.description }}{{ end }}
+{{- end }}
