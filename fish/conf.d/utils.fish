@@ -28,7 +28,7 @@ function __logseq_api -d "Call a Logseq API method"
         -d "$argv[1]"
 end
 
-function t -d "Add a thought to today's Logseq journal"
+function n -d "Add a thought to today's Logseq journal"
     if test (count $argv) -eq 0
         echo "Usage: thought <your thought here>"
         return 1
