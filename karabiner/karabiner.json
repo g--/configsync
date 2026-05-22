@@ -136,7 +136,7 @@
                         ]
                     },
                     {
-                        "description": "Hyper+T: Switch to WezTerm",
+                        "description": "Hyper+T: Switch to Ghostty",
                         "manipulators": [
                             {
                                 "from": {
@@ -145,7 +145,7 @@
                                         "mandatory": ["command", "option", "control", "shift"]
                                     }
                                 },
-                                "to": [{ "shell_command": "open -a WezTerm" }],
+                                "to": [{ "shell_command": "open -a Ghostty" }],
                                 "type": "basic"
                             }
                         ]
