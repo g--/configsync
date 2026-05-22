@@ -21,6 +21,8 @@ install:
 .PHONY: install_darwin
 install_darwin: install
 	@./bin.Darwin/install_dev_tools.sh
+	@mkdir -p ~/.config/ghostty
+	@[ -e ~/.config/ghostty/config ] || ln -s ~/.gsync/ghostty/darwin.conf ~/.config/ghostty/config
 	@[ -e ~/.config/karabiner ] || ln -s ~/.gsync/karabiner ~/.config/ .config/karabiner
 	@[ -e ~/Library/LaunchAgents/ca.oakham.geoff.guistart.plist ] || ln -s ~/.gsync/ca.oakham.geoff.guistart.plist ~/Library/LaunchAgents/
 	@launchctl unload ~/Library/LaunchAgents/ca.oakham.geoff.guistart.plist  > /dev/null 2>&1
@@ -36,6 +38,8 @@ install_darwin: install
 .PHONY: install_linux
 install_linux: install
 	@grep -q '.gsync/bashrc' ~/.bashrc || (cat ~/.gsync/bash_template >> ~/.bashrc && echo "remember to customize ~/.bashrc")
+	@mkdir -p ~/.config/ghostty
+	@[ -e ~/.config/ghostty/config ] || ln -s ~/.gsync/ghostty/linux.conf ~/.config/ghostty/config
 	@./bin.Linux/install_dev_tools.sh
 
 
