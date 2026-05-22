@@ -8,26 +8,26 @@
 # for appropriate commands to add to ~/.config/fish/config.fish instead.
 # See also the release notes for fish 4.3.0 (run `help relnotes`).
 
-set --global fish_color_autosuggestion 93a1a1
+set --global fish_color_autosuggestion brblack
 set --global fish_color_cancel --reverse
-set --global fish_color_command 586e75
-set --global fish_color_comment 93a1a1
+set --global fish_color_command blue
+set --global fish_color_comment brblack
 set --global fish_color_cwd green
 set --global fish_color_cwd_root red
-set --global fish_color_end 268bd2
-set --global fish_color_error dc322f
-set --global fish_color_escape 00a6b2
+set --global fish_color_end blue
+set --global fish_color_error red
+set --global fish_color_escape cyan
 set --global fish_color_history_current --bold
 set --global fish_color_host normal
 set --global fish_color_host_remote
 set --global fish_color_keyword
 set --global fish_color_match --background=brblue
 set --global fish_color_normal normal
-set --global fish_color_operator 00a6b2
+set --global fish_color_operator cyan
 set --global fish_color_option
-set --global fish_color_param 657b83
-set --global fish_color_quote 839496
-set --global fish_color_redirection 6c71c4
+set --global fish_color_param normal
+set --global fish_color_quote yellow
+set --global fish_color_redirection magenta
 set --global fish_color_search_match bryellow --background=white
 set --global fish_color_selection white --bold --background=brblack
 set --global fish_color_status red
@@ -35,7 +35,7 @@ set --global fish_color_user brgreen
 set --global fish_color_valid_path --underline
 set --global fish_pager_color_background
 set --global fish_pager_color_completion green
-set --global fish_pager_color_description B3A06D
+set --global fish_pager_color_description yellow
 set --global fish_pager_color_prefix cyan --underline
 set --global fish_pager_color_progress brwhite --background=cyan
 set --global fish_pager_color_secondary_background
