@@ -151,11 +151,21 @@
                         ]
                     },
                     {
-                        "description": "Hyper+N: Switch to Logseq",
+                        "description": "Hyper+N / Hyper+G: Switch to Logseq",
                         "manipulators": [
                             {
                                 "from": {
                                     "key_code": "n",
+                                    "modifiers": {
+                                        "mandatory": ["command", "option", "control", "shift"]
+                                    }
+                                },
+                                "to": [{ "shell_command": "open -a Logseq" }],
+                                "type": "basic"
+                            },
+                            {
+                                "from": {
+                                    "key_code": "g",
                                     "modifiers": {
                                         "mandatory": ["command", "option", "control", "shift"]
                                     }
@@ -221,6 +231,126 @@
                                     }
                                 },
                                 "to": [{ "shell_command": "open -a 'Google Chrome'" }],
+                                "type": "basic"
+                            }
+                        ]
+                    },
+                    {
+                        "description": "Hyper+S: Switch to Slack",
+                        "manipulators": [
+                            {
+                                "from": {
+                                    "key_code": "s",
+                                    "modifiers": {
+                                        "mandatory": ["command", "option", "control", "shift"]
+                                    }
+                                },
+                                "to": [{ "shell_command": "open -a Slack" }],
+                                "type": "basic"
+                            }
+                        ]
+                    },
+                    {
+                        "description": "Hyper+E: Switch to Outlook Mail",
+                        "manipulators": [
+                            {
+                                "from": {
+                                    "key_code": "e",
+                                    "modifiers": {
+                                        "mandatory": ["command", "option", "control", "shift"]
+                                    }
+                                },
+                                "to": [{ "shell_command": "osascript -e 'tell application \"Microsoft Outlook\" to activate' -e 'tell application \"System Events\" to keystroke \"1\" using command down'" }],
+                                "type": "basic"
+                            }
+                        ]
+                    },
+                    {
+                        "description": "Hyper+V: Switch to Microsoft Teams",
+                        "manipulators": [
+                            {
+                                "from": {
+                                    "key_code": "v",
+                                    "modifiers": {
+                                        "mandatory": ["command", "option", "control", "shift"]
+                                    }
+                                },
+                                "to": [{ "shell_command": "open -a 'Microsoft Teams'" }],
+                                "type": "basic"
+                            }
+                        ]
+                    },
+                    {
+                        "description": "Hyper navigation/editing keys",
+                        "manipulators": [
+                            {
+                                "from": {
+                                    "key_code": "1",
+                                    "modifiers": {
+                                        "mandatory": ["command", "option", "control", "shift"]
+                                    }
+                                },
+                                "to": [{ "key_code": "page_up" }],
+                                "type": "basic"
+                            },
+                            {
+                                "from": {
+                                    "key_code": "q",
+                                    "modifiers": {
+                                        "mandatory": ["command", "option", "control", "shift"]
+                                    }
+                                },
+                                "to": [{ "key_code": "page_down" }],
+                                "type": "basic"
+                            },
+                            {
+                                "from": {
+                                    "key_code": "2",
+                                    "modifiers": {
+                                        "mandatory": ["command", "option", "control", "shift"]
+                                    }
+                                },
+                                "to": [{ "key_code": "home" }],
+                                "type": "basic"
+                            },
+                            {
+                                "from": {
+                                    "key_code": "w",
+                                    "modifiers": {
+                                        "mandatory": ["command", "option", "control", "shift"]
+                                    }
+                                },
+                                "to": [{ "key_code": "end" }],
+                                "type": "basic"
+                            },
+                            {
+                                "from": {
+                                    "key_code": "x",
+                                    "modifiers": {
+                                        "mandatory": ["command", "option", "control", "shift"]
+                                    }
+                                },
+                                "to": [{ "key_code": "delete_forward" }],
+                                "type": "basic"
+                            },
+                            {
+                                "from": {
+                                    "key_code": "r",
+                                    "modifiers": {
+                                        "mandatory": ["command", "option", "control", "shift"]
+                                    }
+                                },
+                                "to": [{ "key_code": "return_or_enter" }],
+                                "type": "basic"
+                            },
+                            {
+                                "from": {
+                                    "key_code": "z",
+                                    "modifiers": {
+                                        "mandatory": ["command", "option", "control", "shift"]
+                                    }
+                                },
+                                "to": [{ "key_code": "spacebar" }],
                                 "type": "basic"
                             }
                         ]
