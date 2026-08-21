@@ -37,6 +37,19 @@ function cdpr -d "cd into a worktree for a GitHub PR, creating one if needed"
   set -l repo_name (_wt_repo_name $repo_url)
   set -l worktree_path (_wt_path $repo_name $branch)
 
+  # First, look for an existing worktree with this branch already checked out.
+  # The worktree path on disk may not match the path we'd compute (e.g., the
+  # branch was renamed after the worktree was created), so search by branch.
+  set -l clone_dir $REPO_CLONES/$repo_name
+  if test -d $clone_dir
+    set -l existing (git -C $clone_dir worktree list --porcelain | awk -v b="refs/heads/$branch" '/^worktree / {wt=$2} $1=="branch" && $2==b {print wt; exit}')
+    if test -n "$existing"
+      echo "Reusing existing worktree at $existing"
+      cd $existing
+      return
+    end
+  end
+
   if test -d $worktree_path
     echo "Reusing existing worktree at $worktree_path"
     cd $worktree_path
