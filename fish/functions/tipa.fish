@@ -1,6 +1,6 @@
-function tipa -d "terraform init, plan to tf-plan file, then prompt before apply unless no changes (via t)"
+function tipa -d "terraform init, plan to .tf-plan file, then prompt before apply unless no changes (via t)"
     t init; or return
-    t plan -detailed-exitcode -out tf-plan $argv
+    t plan -detailed-exitcode -out .tf-plan $argv
     switch $status
         case 0
             echo "No changes. Nothing to apply."
@@ -10,10 +10,10 @@ function tipa -d "terraform init, plan to tf-plan file, then prompt before apply
         case '*'
             return 1
     end
-    read -l -P "Apply tf-plan? [y/N] " answer
+    read -l -P "Apply .tf-plan? [y/N] " answer
     if test "$answer" = y -o "$answer" = Y
-        t apply tf-plan
+        t apply .tf-plan
     else
-        echo "Skipped apply. Run it manually with: t apply tf-plan"
+        echo "Skipped apply. Run it manually with: t apply .tf-plan"
     end
 end

@@ -1,5 +1,6 @@
 #!/bin/bash -e
 
-git add "$@"
-gcommit
+# Optional args are paths to stage; gcommit handles the `git add`. With none,
+# commit whatever is already staged.
+gcommit "$@"
 ghpr

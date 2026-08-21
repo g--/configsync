@@ -35,6 +35,10 @@ function n -d "Add a thought to today's Logseq journal"
     end
     set -l today (date '+%Y-%m-%d')
     set -l text (string join " " $argv)
+    set -l ticket (_ticket)
+    if test -n "$ticket"
+        set text "#$ticket $text"
+    end
     set -l escaped (string replace -a '"' '\\"' -- "$text")
     set -l result (__logseq_api '{"method": "logseq.Editor.appendBlockInPage", "args": ["'"$today"'", "'"$escaped"'"]}') || return 1
     if string match -q 'null' -- "$result"

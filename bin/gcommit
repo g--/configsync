@@ -1,5 +1,11 @@
 #!/bin/bash
 
+# Optional args are paths to stage before committing. With none, commit
+# whatever is already staged.
+if [ "$#" -gt 0 ]; then
+    git add "$@"
+fi
+
 TEMPLATE_FILE=`mktemp`
 
 echo `cat ${CONFIG_SYNC_ROOT}/git/commit_types | fzf` >> $TEMPLATE_FILE
@@ -8,7 +14,7 @@ echo ""  >> $TEMPLATE_FILE
 
 echo "Refs:" `_ticket` >> $TEMPLATE_FILE
 
-git commit -t $TEMPLATE_FILE "$@"
+git commit -t $TEMPLATE_FILE
 
 
 

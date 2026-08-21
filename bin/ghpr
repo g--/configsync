@@ -1,5 +1,10 @@
 #!/bin/bash
 
+# Ensure the branch exists on the remote; gh pr create needs a head to open
+# against, and a fresh branch has never been pushed. Fail fast before we spend
+# effort building the description and opening the editor.
+git push -u origin HEAD || exit 1
+
 # log messages
 MAIN=`git rev-parse --abbrev-ref origin/HEAD`
 BASE=`git merge-base $MAIN HEAD`
@@ -308,11 +313,21 @@ if [[ -n "$ALL_LABELS" ]]; then
     fi
 fi
 
-gh pr create \
+PR_URL=$(gh pr create \
 	--title "${TITLE}" \
 	--body-file "${PR_DESCRIPTION_TEMP}" \
 	$LABEL_ARG \
-	"$@"
+	"$@")
+echo "${PR_URL}"
+
+# Record the PR in today's Logseq journal, tagging the ticket so it links.
+if [[ -n "${PR_URL}" ]]; then
+    NOTE="Opened PR [${TITLE}](${PR_URL})"
+    if [[ -n "${TICKET_NO}" ]]; then
+        NOTE="${NOTE} for #${TICKET_NO}"
+    fi
+    logseq-note "${NOTE}"
+fi
 
 
 # this is now generating a multi-commit pr description with the template at the bottom.

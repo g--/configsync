@@ -38,6 +38,15 @@ cat <<EOF
     branch_status - summary of what's in this branch
     gprunesquashmerged - prune old branches
     ghg - github grep
+
+ Ticket workspaces (~/t)
+    nt <ticket> [slug] - make/reuse a ticket root under ~/t and cd in
+    ct - fzf-jump between ticket roots
+    nw <repo> [name] - worktree for <repo> under the current ticket root
+                       (outside a root: nw <repo> <ticket>/<name> -> ~/w)
+    cw <repo> <branch> / cr <pr-url> / cdpr <pr-url> - check out into a worktree
+    dw <path> - remove one worktree (clean + in sync only)
+    dw-merged [--dry-run] - remove merged worktrees, sweep empty ticket roots
 EOF
 }
 HELP_COMMAND=_base_help
@@ -105,15 +114,10 @@ _branch() {
 }
 export -f _branch
 
+# Single source of truth is bin/_ticket (also used by fish and the bin/ scripts).
+# It resolves the branch prefix first, then walks up for the nearest .ticket.
 _ticket() {
-  BRANCH=`_branch`
-  if [[ "$BRANCH" =~ "/" ]]; then
-     echo -n $BRANCH | cut -f 1 -d "/"
-  elif [[ -e "$PWD/.ticket" ]]; then
-     cat "$PWD/.ticket"
-  else
-     echo -n ""
-  fi
+  command _ticket
 }
 export -f _ticket
 
