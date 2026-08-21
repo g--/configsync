@@ -4,7 +4,7 @@ if [ $1 == "-h" ]; then
 	cat <<EOF
 Usage:
     tfplan2targets # runs plan then outputs a list of targets.
-    tfplan2targets tf-plan # outputs a list of targets based of a previous plan.
+    tfplan2targets .tf-plan # outputs a list of targets based of a previous plan.
 
 EOF
    exit 0
