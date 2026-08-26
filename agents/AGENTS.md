@@ -18,7 +18,8 @@ infrastructure details. Notify me if you accidentally encounter sensitive data.
 # Skills
 
 Use skills by default: commit-message, pull-request.
-When writing for human consumption use the writing-prose skill.
+When writing for humans use the writing-prose skill;
+for agents use the writing-for-agents skill.
 
 # Workflow
 
