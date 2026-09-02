@@ -1,32 +1,29 @@
 #!/bin/bash
 
-# Resolve the Jira ticket for the current directory.
+# Resolve the issue identifier for the current directory.
 #
 # Preference order:
-#   1. The branch prefix, when on a TICKET/description branch.
+#   1. The branch prefix, when on an ISSUE/description branch.
 #   2. The nearest .ticket file found by walking up from $PWD. This lets a
-#      whole ticket root (~/t/SCORE-1234-slug/) and every workspace under it
-#      share one ticket regardless of each workspace's branch.
+#      ticket root and each workspace below it share one identifier.
 
-if git rev-parse --git-dir > /dev/null 2>&1; then
- BRANCH=`git rev-parse --abbrev-ref HEAD`
+if branch=$(git symbolic-ref --short HEAD 2>/dev/null); then
+  :
 else
- BRANCH=""
+  branch=""
 fi
 
-if [[ "$BRANCH" =~ "/" ]]; then
- echo -n $BRANCH | cut -f 1 -d "/"
- exit 0
+if [[ "$branch" == */* ]]; then
+  printf '%s' "${branch%%/*}"
+  exit 0
 fi
 
 dir="$PWD"
 while [[ -n "$dir" ]]; do
- if [[ -e "$dir/.ticket" ]]; then
-  cat "$dir/.ticket"
-  exit 0
- fi
- [[ "$dir" == "/" ]] && break
- dir="$(dirname "$dir")"
+  if [[ -f "$dir/.ticket" ]]; then
+    cat "$dir/.ticket"
+    exit 0
+  fi
+  [[ "$dir" == "/" ]] && break
+  dir="$(dirname "$dir")"
 done
-
-echo -n ""

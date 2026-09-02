@@ -1,0 +1,182 @@
+#!/usr/bin/env python3
+"""List open PRs for worktrees in the current direct or ticket workspace."""
+
+import hashlib
+import json
+import os
+import re
+import subprocess
+import sys
+import time
+from pathlib import Path
+from urllib.parse import urlparse
+
+CACHE_TTL_SECONDS = 300
+PR_LIMIT = 100
+
+
+def run(*args: str, cwd: Path | None = None, timeout: int = 10) -> str:
+    result = subprocess.run(
+        args,
+        cwd=cwd,
+        text=True,
+        capture_output=True,
+        timeout=timeout,
+        check=True,
+    )
+    return result.stdout.strip()
+
+
+def env_path(name: str) -> Path | None:
+    value = os.environ.get(name)
+    return Path(value).expanduser().resolve() if value else None
+
+
+def git_root(cwd: Path) -> Path | None:
+    try:
+        return Path(run("git", "rev-parse", "--show-toplevel", cwd=cwd)).resolve()
+    except (OSError, subprocess.SubprocessError):
+        return None
+
+
+def workspace_worktrees(cwd: Path) -> list[Path]:
+    tickets_dir = env_path("TICKETS_DIR")
+    if tickets_dir:
+        for candidate in (cwd, *cwd.parents):
+            if candidate.parent == tickets_dir and (candidate / ".ticket").is_file():
+                return sorted(path for path in candidate.iterdir() if path.is_dir())
+            if candidate == tickets_dir:
+                break
+
+    root = git_root(cwd)
+    worktree_dir = env_path("WORKTREE_DIR")
+    if root and worktree_dir and root.parent == worktree_dir:
+        return [root]
+
+    return []
+
+
+def github_repo(remote: str) -> tuple[str, str] | None:
+    if "://" in remote:
+        parsed = urlparse(remote)
+        host = parsed.hostname
+        path = parsed.path
+    else:
+        match = re.match(r"^(?:[^@]+@)?([^:]+):(.+)$", remote)
+        if not match:
+            return None
+        host, path = match.groups()
+
+    parts = path.strip("/").removesuffix(".git").split("/")
+    if not host or len(parts) != 2:
+        return None
+    owner_repo = "/".join(parts)
+    return host.lower(), owner_repo
+
+
+def worktree_info(path: Path) -> dict[str, str] | None:
+    try:
+        if git_root(path) != path.resolve():
+            return None
+        branch = run("git", "branch", "--show-current", cwd=path)
+        remote = run("git", "remote", "get-url", "origin", cwd=path)
+    except (OSError, subprocess.SubprocessError):
+        return None
+
+    repo = github_repo(remote)
+    if not branch or not repo:
+        return None
+    host, owner_repo = repo
+    return {
+        "path": str(path),
+        "worktree": path.name,
+        "branch": branch,
+        "host": host,
+        "repo": owner_repo,
+    }
+
+
+def cache_path(host: str, repo: str) -> Path:
+    cache_root = Path(os.environ.get("XDG_CACHE_HOME", Path.home() / ".cache")) / "pi-ticket-prs"
+    key = hashlib.sha256(f"{host}/{repo}".encode()).hexdigest()[:20]
+    return cache_root / f"{key}.json"
+
+
+def read_cache(path: Path) -> tuple[float, list[dict]] | None:
+    try:
+        payload = json.loads(path.read_text())
+        return float(payload["fetchedAt"]), payload["prs"]
+    except (OSError, KeyError, TypeError, ValueError, json.JSONDecodeError):
+        return None
+
+
+def write_cache(path: Path, prs: list[dict]) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    temp = path.with_suffix(f".{os.getpid()}.tmp")
+    temp.write_text(json.dumps({"fetchedAt": time.time(), "prs": prs}, separators=(",", ":")))
+    temp.replace(path)
+
+
+def open_prs(host: str, repo: str) -> list[dict]:
+    path = cache_path(host, repo)
+    cached = read_cache(path)
+    if cached and time.time() - cached[0] < CACHE_TTL_SECONDS:
+        return cached[1]
+
+    gh_repo = repo if host == "github.com" else f"{host}/{repo}"
+    try:
+        # ponytail: list up to 100 open PRs once per repo; use branch-batched GraphQL if that ceiling is hit.
+        prs = json.loads(
+            run(
+                "gh",
+                "pr",
+                "list",
+                "--repo",
+                gh_repo,
+                "--state",
+                "open",
+                "--limit",
+                str(PR_LIMIT),
+                "--json",
+                "number,url,headRefName",
+            )
+        )
+        if not isinstance(prs, list):
+            raise ValueError("unexpected gh output")
+        write_cache(path, prs)
+        return prs
+    except (OSError, subprocess.SubprocessError, ValueError, json.JSONDecodeError):
+        return cached[1] if cached else []
+
+
+def main() -> int:
+    cwd = Path(sys.argv[1] if len(sys.argv) > 1 else os.getcwd()).expanduser().resolve()
+    worktrees = [info for path in workspace_worktrees(cwd) if (info := worktree_info(path))]
+    repos = {(info["host"], info["repo"]) for info in worktrees}
+    prs_by_repo = {repo: open_prs(*repo) for repo in repos}
+
+    matches = []
+    seen_urls = set()
+    for info in worktrees:
+        for pr in prs_by_repo[(info["host"], info["repo"])]:
+            if pr.get("headRefName") != info["branch"] or pr.get("url") in seen_urls:
+                continue
+            if not isinstance(pr.get("number"), int) or not isinstance(pr.get("url"), str):
+                continue
+            seen_urls.add(pr["url"])
+            matches.append(
+                {
+                    "number": pr["number"],
+                    "url": pr["url"],
+                    "repo": info["repo"],
+                    "branch": info["branch"],
+                    "worktree": info["worktree"],
+                }
+            )
+
+    print(json.dumps(matches, separators=(",", ":")))
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

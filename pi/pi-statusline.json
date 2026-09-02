@@ -1,0 +1,13 @@
+{
+  "segments": [
+    "model",
+    "thinking",
+    "cwd",
+    "context",
+    "cost"
+  ],
+  "extensionStatusIcons": {
+    "pi-cache-stats": "",
+    "ticket": ""
+  }
+}
