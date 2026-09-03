@@ -322,6 +322,8 @@ echo "${PR_URL}"
 
 # Record the PR in today's Logseq journal, tagging the ticket so it links.
 if [[ -n "${PR_URL}" ]]; then
+    _workspace_prs --refresh >/dev/null 2>&1 || true
+
     NOTE="Opened PR [${TITLE}](${PR_URL})"
     if [[ -n "${TICKET_NO}" ]]; then
         NOTE="${NOTE} for #${TICKET_NO}"

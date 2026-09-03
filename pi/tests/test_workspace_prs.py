@@ -76,8 +76,8 @@ def main() -> None:
             "GH_RESPONSES": json.dumps(responses),
         }
 
-        def run(cwd: Path) -> list[dict]:
-            output = subprocess.check_output((str(SCRIPT), str(cwd)), env=env, text=True)
+        def run(cwd: Path, *args: str) -> list[dict]:
+            output = subprocess.check_output((str(SCRIPT), *args, str(cwd)), env=env, text=True)
             return json.loads(output)
 
         ticket_prs = run(repo_a)
@@ -87,9 +87,12 @@ def main() -> None:
         assert run(repo_a) == ticket_prs
         assert len(call_log.read_text().splitlines()) == 2, "fresh cache should avoid gh"
 
+        assert run(repo_a, "--refresh") == ticket_prs
+        assert len(call_log.read_text().splitlines()) == 4, "refresh should bypass the cache"
+
         direct_prs = run(direct)
         assert [pr["number"] for pr in direct_prs] == [33]
-        assert len(call_log.read_text().splitlines()) == 3
+        assert len(call_log.read_text().splitlines()) == 5
 
         assert run(root) == []
 

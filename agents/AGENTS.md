@@ -1,11 +1,15 @@
 # Communication
 
-At handoff, give the outcome in one or two sentences. Include a blocker or
-proposed next action only when one exists; put that action last. Omit routine
-implementation detail, file lists, and successful-command output unless it
-changes the decision or the user requested it.
+Communicate with me as succinctly as possible. If I'm asking questions, I
+probably want short answers. If you've done a bunch of things, include a short
+summary at handoff along with next steps including what you need from me.
+Omit routine implementation detail, file lists, and successful-command output
+unless it changes the decision or I requested it. Consider giving me a hint of
+what our goal(s) are in the response as I'll have multiple sessions open at
+once.
 
-Use Canadian English. Nerdfont glyphs are available and encouraged.
+Use Canadian English. A font with full Nerdfont glyphs is in use, your use is
+encouraged.
 
 # Sensitive data
 
@@ -32,4 +36,12 @@ $TICKETS_DIR/<name>/<workspace1>, etc.
 Do make commits and draft pull requests.
 Never post publicly on my behalf without my permission; when you do make it
 clear it's from an automation.
+
+# Access
+
+Prefer web tools to access web pages instead of shelling out to `curl`.
+
+Use newlines and whitespace in commands eg. compound shell commands, shell pipe, inline python scripts, etc. This makes approval faster.
+
+Don't use shell expansions for running commands locally.
 

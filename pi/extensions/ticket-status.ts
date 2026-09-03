@@ -43,7 +43,7 @@ function parseWorkspacePrs(value: string): WorkspacePr[] {
 }
 
 export default function (pi: ExtensionAPI) {
-  async function updateWorkspace(ctx: ExtensionContext) {
+  async function updateWorkspace(ctx: ExtensionContext, refreshPrs = false) {
     const parts: string[] = [];
     try {
       const result = await pi.exec("_ticket", [], {
@@ -67,7 +67,7 @@ export default function (pi: ExtensionAPI) {
     }
 
     try {
-      const result = await pi.exec("_workspace_prs", [], {
+      const result = await pi.exec("_workspace_prs", refreshPrs ? ["--refresh"] : [], {
         cwd: ctx.cwd,
         timeout: 15000,
       });
@@ -91,6 +91,17 @@ export default function (pi: ExtensionAPI) {
   pi.on("session_start", (_event, ctx) => {
     ctx.ui.setStatus("session-metrics", undefined);
     return updateWorkspace(ctx);
+  });
+  pi.on("tool_result", (event, ctx) => {
+    const command = event.input.command;
+    if (
+      event.toolName === "bash" &&
+      !event.isError &&
+      typeof command === "string" &&
+      /(?:^|\s)gh\s+pr\s+create(?:\s|$)/.test(command)
+    ) {
+      return updateWorkspace(ctx, true);
+    }
   });
   pi.on("turn_end", (_event, ctx) => updateWorkspace(ctx));
 }
