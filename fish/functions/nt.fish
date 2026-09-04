@@ -36,5 +36,5 @@ function nt -d "Create (or reuse) a ~/t ticket root and cd into it"
 end
 
 if set -q JIRA_BASE
-  complete -c nt -n "test (count (commandline -opc)) -eq 1" -a "(jira now_as_branch_name | string replace -r '/.*' '')" -f
+  complete -c nt -n "test (count (commandline -opc)) -eq 1" -a "(_choose_jira_ticket | string trim -r -c /)" -f
 end

@@ -258,7 +258,7 @@ function nw -d "Clone (or fetch) a repo and create a worktree with a new branch"
     if test (count $argv) -ge 2
       set suffix $argv[2]
     else
-      # Default suffix is the ticket root's slug (SCORE-1234-fix-widget -> fix-widget).
+      # Default suffix is the ticket root's slug (PROJ-1234-fix-widget -> fix-widget).
       set suffix (string replace -r '^[A-Z][A-Z0-9_]+-[0-9]+-' '' -- (path basename $root))
       # Rootless slug (dir was just the id): fall back to the repo name.
       if test -z "$suffix" -o "$suffix" = "$ticket"
