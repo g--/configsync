@@ -41,7 +41,9 @@ clear it's from an automation.
 
 Prefer web tools to access web pages instead of shelling out to `curl`.
 
-Use newlines and whitespace in commands eg. compound shell commands, shell pipe, inline python scripts, etc. This makes approval faster.
-
 Don't use shell expansions for running commands locally.
+
+Avoiding issuing complex shell commands or python script for collecting data; instead prefer multiple simple commands to acquire and process the data.
+
+Use newlines and whitespace in commands eg. compound shell commands, shell pipe, inline python scripts, etc. This makes approval faster.
 
