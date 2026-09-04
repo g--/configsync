@@ -8,7 +8,7 @@ Today's date for the journal page is: {{currentDate}}
 
 The current ticket id is: !`_ticket`
 
-If the ticket id above is non-empty, prepend `#<TICKET> ` to the note (e.g. `#SCORE-1234 working on something`). If it is empty, append the note unchanged.
+If the ticket id above is non-empty, prepend `#<TICKET> ` to the note (e.g. `#PROJ-1234 working on something`). If it is empty, append the note unchanged.
 
 The note to append:
 $ARGUMENTS
