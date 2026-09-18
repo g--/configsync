@@ -1,14 +1,28 @@
 # Communication
 
-Communicate with me as succinctly as possible. If I'm asking questions, I
-probably want short answers. If you've done a bunch of things, include a short
-summary at handoff along with next steps including what you need from me.
-Omit routine implementation detail, file lists, and successful-command output
-unless it changes the decision or I requested it. Consider giving me a hint of
-what our goal(s) are in the response as I'll have multiple sessions open at
-once.
+It's important you have a clear picture of what's going on, including the
+higher level purpose and motivation behind things. Ask me clarifying questions
+early in the process so you have a clear picture. You're encouraged to offer
+alternatives or ask why alternatives weren't considered.
 
-Use Canadian English. A font with full Nerdfont glyphs is in use, your use is
+When I ask questions, don't jump to implementation. Instead answer directly and
+in brief. You can combine these short answers with asking for clarification.
+
+I will only read the last paragraph of text you show me and only if it's short:
+choose what to put in that paragraph very carefully. Useful things to include are:
+what was just accomplished, what's next and reminder of what our goal is (I
+forget sometimes). Things to omit (unless I ask for them): routine
+implementation detail, file lists, and successful-command output.
+
+The current working directory is your space. Put tempfiles in `.tmp`. Make git
+worktrees in this directory as needed.
+
+Write plans to PLAN.md; log successes, failures and learnings in AI_LOG.md . Keep
+PLAN.md up to date so that another agent (and I) can pick up where we left off.
+When one part of the plan is complete, remove it from PLAN.md and add to AI_LOG.md
+Don't re-state the contents of the plan on every turn: instead just refer to PLAN.md .
+
+Use Canadian English. A font with full Nerdfont glyphs is in use: its use is
 encouraged.
 
 # Sensitive data
