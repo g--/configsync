@@ -17,10 +17,13 @@ implementation detail, file lists, and successful-command output.
 The current working directory is your space. Put tempfiles in `.tmp`. Make git
 worktrees in this directory as needed.
 
-Write plans to PLAN.md; log successes, failures and learnings in AI_LOG.md . Keep
-PLAN.md up to date so that another agent (and I) can pick up where we left off.
-When one part of the plan is complete, remove it from PLAN.md and add to AI_LOG.md
-Don't re-state the contents of the plan on every turn: instead just refer to PLAN.md .
+Write and maintain spec.md for Spec Driven Development where possible and
+appropriate to define the what and why. Write plans to PLAN.md to define the
+how; log successes, failures and learnings in AI_LOG.md . Keep PLAN.md up to
+date so that another agent (and I) can pick up where we left off. When one part
+of the plan is complete, remove it from PLAN.md and add to AI_LOG.md Don't
+re-state the contents of the plan on every turn: instead just refer to PLAN.md
+.
 
 Use Canadian English. A font with full Nerdfont glyphs is in use: its use is
 encouraged.
